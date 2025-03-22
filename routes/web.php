@@ -10,7 +10,40 @@ use App\Models\Project;
 use App\Models\Service;
 use App\Models\Skill;
 use App\Models\Testimonial;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
+use Illuminate\Support\Facades\Auth;
+
+Route::get('/run-seeds', function (Request $request) {
+    // Retrieve the environment from the request query parameter, default to 'production'
+    $env = $request->query('env', 'production');
+
+    // Define allowed environments
+    $allowedEnvs = ['development', 'staging', 'production'];
+
+    // Validate the provided environment
+    if (!in_array($env, $allowedEnvs)) {
+        abort(403, 'Unauthorized environment specified.');
+    }
+
+    // If targeting production, enforce stricter authorization
+    if ($env === 'production') {
+        if (!Auth::check() ) {
+            abort(403, 'Unauthorized action.');
+        }
+    }
+
+    // Optional: You can check that the current app environment matches the target if needed.
+    // if (app()->environment() !== $env) {
+    //     abort(403, 'Environment mismatch.');
+    // }
+
+    // Run the seeder
+    Artisan::call('db:seed');
+
+    return "Seeding complete on the {$env} environment!";
+});
 Route::resource('/articles', ArticleController::class);
 Route::resource( '/projects',ProjectController::class);
 
@@ -51,7 +84,7 @@ Route::get('/', function () {
         'backendSkills' => Skill::where('type', 'technical')->where('category', 'backend')->get()->take(4),
         'otherSkills' => Skill::where('type', '=', 'tools')->get()->take(4),// or however you want to group them
         'workExperience' => Experience::orderBy('period', 'desc')->get()->take(4),
-        'testimonials' => Testimonial::where('user_id','=',2)->get()->take(3),
+        'testimonials' => Testimonial::get()->take(3),
     ]);
 })->name('home');
 // Route::get('/index', function () {
@@ -82,10 +115,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
-
-
-
-Route::get('/saherqaidseeders', [ExperienceController::class,'saher'])->name(name: 'experience');
 
 
 

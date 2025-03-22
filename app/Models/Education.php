@@ -20,14 +20,11 @@ class Education extends Model
         'location',
         'description',
         'courses',
-        'user_id'
+
     ];
 
     protected $casts = [
         'courses' => 'array',
     ];
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 }

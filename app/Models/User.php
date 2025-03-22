@@ -62,45 +62,6 @@ class User extends Authenticatable
         ];
     }
     // Example relationships (if needed):
-    public function projects()
-    {
-        return $this->hasMany(Project::class);
-    }
 
-    public function articles()
-    {
-        return $this->hasMany(Article::class);
-    }
-
-    public function experiences()
-    {
-        return $this->hasMany(Experience::class);
-    }
-
-    public function testimonials()
-    {
-        return $this->hasMany(Testimonial::class);
-    }
-
-    public function services()
-    {
-        return $this->hasMany(Service::class);
-    }
-
-    public function skills()
-    {
-        return $this->hasMany(Skill::class);
-    }
-    public function awards()
-    {
-        return $this->hasMany(Award::class);
-    }
-
-    public function certificates(){
-        return $this->hasMany(Certification::class);
-     }
-     public function education(){
-        return $this->hasMany(Education::class);
-     }
 
 }

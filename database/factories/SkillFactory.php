@@ -11,7 +11,7 @@ class SkillFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'    => \App\Models\User::factory(),
+            // 'user_id'    => \App\Models\User::factory(),
             'name'       => $this->faker->word,
             'level'      => $this->faker->numberBetween(1, 10),
             'type'       => $this->faker->randomElement(['technical', 'tools', 'soft']),

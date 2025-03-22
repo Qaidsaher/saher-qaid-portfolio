@@ -24,16 +24,11 @@ class ExperienceController extends Controller
      */
     public function index()
     {
-        $experiences    = Experience::where('user_id', 2)->orderBy('period', 'desc')->get();
-        $educations     = Education::where('user_id', 2)->orderBy('period', 'desc')->get();
-        $certifications = Certification::where('user_id', 2)->orderBy('date', 'desc')->get();
-        $awards         = Award::where('user_id', 2)->orderBy('date', 'desc')->get();
-        // return response()->json([
-        //     'experiences'    => $experiences,
-        //     'educations'     => $educations,
-        //     'certifications' => $certifications,
-        //     'awards'         => $awards,
-        // ]);
+        $experiences    = Experience::orderBy('period', 'desc')->get();
+        $educations     = Education::orderBy('period', 'desc')->get();
+        $certifications = Certification::orderBy('date', 'desc')->get();
+        $awards         = Award::orderBy('date', 'desc')->get();
+      
         return Inertia::render('experiences/index', [
             'experiences'    => $experiences,
             'educations'     => $educations,

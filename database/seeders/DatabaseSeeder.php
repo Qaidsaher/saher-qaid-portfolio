@@ -22,9 +22,10 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public static function seederCreate($id) {
+    public static function seederCreate()
+    {
         Education::create([
-            'user_id'     => $id,
+
             'degree'      => 'B.Sc. Computer Science',
             'institution' => 'MIT',
             'logo'        => '/placeholder.svg',
@@ -35,7 +36,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Education::create([
-            'user_id'     => $id,
+
             'degree'      => 'M.Sc. Computer Science',
             'institution' => 'Stanford University',
             'logo'        => '/placeholder.svg',
@@ -46,7 +47,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Education::create([
-            'user_id'     => $id,
+
             'degree'      => 'MBA',
             'institution' => 'Harvard Business School',
             'logo'        => '/placeholder.svg',
@@ -57,7 +58,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Education::create([
-            'user_id'     => $id,
+
             'degree'      => 'Ph.D. in Computer Science',
             'institution' => 'Carnegie Mellon University',
             'logo'        => '/placeholder.svg',
@@ -68,7 +69,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Education::create([
-            'user_id'     => $id,
+
             'degree'      => 'Diploma in UX Design',
             'institution' => 'General Assembly',
             'logo'        => '/placeholder.svg',
@@ -79,7 +80,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Award::create([
-            'user_id'     => $id,
+
             'name'        => 'Best Developer Award',
             'issuer'      => 'CompanyX',
             'date'        => '2021',
@@ -87,7 +88,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Award::create([
-            'user_id'     => $id,
+
             'name'        => 'Innovation in Technology',
             'issuer'      => 'TechCon',
             'date'        => '2020',
@@ -95,7 +96,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Award::create([
-            'user_id'     => $id,
+
             'name'        => 'Top Mentor Award',
             'issuer'      => 'Developer Conference',
             'date'        => '2019',
@@ -103,7 +104,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Award::create([
-            'user_id'     => $id,
+
             'name'        => 'Excellence in Research',
             'issuer'      => 'Academic Society',
             'date'        => '2018',
@@ -111,7 +112,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Award::create([
-            'user_id'     => $id,
+
             'name'        => 'Customer Choice Award',
             'issuer'      => 'Tech Summit',
             'date'        => '2022',
@@ -119,14 +120,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Experience::create([
-            'user_id'         => $id,
+
             'title'           => 'Senior Full-Stack Developer',
             'company'         => 'Tech Innovations Inc.',
             'logo'            => '/placeholder.svg',
             'period'          => '2021 - Present',
             'location'        => 'San Francisco, CA (Remote)',
             'description'     => 'Leading the development of scalable enterprise applications.',
-            'responsibilities'=> [
+            'responsibilities' => [
                 'Lead team of 5 developers',
                 'CI/CD pipeline setup',
                 'Backend architecture'
@@ -139,14 +140,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Experience::create([
-            'user_id'         => $id,
+
             'title'           => 'Full-Stack Developer',
             'company'         => 'Web Solutions Ltd.',
             'logo'            => '/placeholder.svg',
             'period'          => '2019 - 2021',
             'location'        => 'New York, NY',
             'description'     => 'Developed and maintained multiple web applications.',
-            'responsibilities'=> [
+            'responsibilities' => [
                 'Developed RESTful APIs',
                 'Collaborated with cross-functional teams'
             ],
@@ -157,14 +158,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Experience::create([
-            'user_id'         => $id,
+
             'title'           => 'Junior Developer',
             'company'         => 'Startup Inc.',
             'logo'            => '/placeholder.svg',
             'period'          => '2017 - 2019',
             'location'        => 'Austin, TX',
             'description'     => 'Assisted in developing web applications and internal tools.',
-            'responsibilities'=> [
+            'responsibilities' => [
                 'Front-end development',
                 'Bug fixing and testing'
             ],
@@ -175,14 +176,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Experience::create([
-            'user_id'         => $id,
+
             'title'           => 'Intern Developer',
             'company'         => 'Tech Startup',
             'logo'            => '/placeholder.svg',
             'period'          => '2016 - 2017',
             'location'        => 'Remote',
             'description'     => 'Supported development teams in building MVPs.',
-            'responsibilities'=> [
+            'responsibilities' => [
                 'Code reviews',
                 'Unit testing'
             ],
@@ -193,14 +194,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Experience::create([
-            'user_id'         => $id,
+
             'title'           => 'Freelance Developer',
             'company'         => 'Self-Employed',
             'logo'            => '/placeholder.svg',
             'period'          => '2015 - 2016',
             'location'        => 'Remote',
             'description'     => 'Built small-scale websites and applications for clients.',
-            'responsibilities'=> [
+            'responsibilities' => [
                 'Client communication',
                 'Full project lifecycle management'
             ],
@@ -211,7 +212,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Certification::create([
-            'user_id' => $id,
+
             'name'    => 'AWS Certified Developer',
             'issuer'  => 'Amazon',
             'date'    => '2022',
@@ -219,7 +220,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Certification::create([
-            'user_id' => $id,
+
             'name'    => 'Google Cloud Professional Developer',
             'issuer'  => 'Google',
             'date'    => '2021',
@@ -227,7 +228,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Certification::create([
-            'user_id' => $id,
+
             'name'    => 'Microsoft Certified: Azure Developer Associate',
             'issuer'  => 'Microsoft',
             'date'    => '2020',
@@ -235,7 +236,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Certification::create([
-            'user_id' => $id,
+
             'name'    => 'Certified Kubernetes Application Developer',
             'issuer'  => 'Cloud Native Computing Foundation',
             'date'    => '2019',
@@ -243,7 +244,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Certification::create([
-            'user_id' => $id,
+
             'name'    => 'Scrum Master Certification',
             'issuer'  => 'Scrum Alliance',
             'date'    => '2018',
@@ -259,7 +260,7 @@ class DatabaseSeeder extends Seeder
         $user = User::factory()->create([
             'name' => 'SAHER QAID',
             'email' => 'saher@qaid.com',
-            'password'=>Hash::make('saher@qaid.com'),
+            'password' => Hash::make('saher@qaid.com'),
             'avatar'       => 'https://example.com/avatar.png',
             'about'        => 'Passionate full-stack developer with a focus on building scalable web applications.',
             'bio'          => 'I have over 5 years of experience in modern web development using Laravel, React, and Vue.',
@@ -273,13 +274,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Create related records for this user
-        Project::factory(8)->create(['user_id' => $user->id]);
-        Article::factory(5)->create(['user_id' => $user->id]);
-        // Experience::factory(5)->create(['user_id' => $user->id]);
-      
-        Testimonial::factory(5)->create(['user_id' => $user->id]);
-        Service::factory(2)->create(['user_id' => $user->id]);
-        Skill::factory(30)->create(['user_id' => $user->id]);
+        Project::factory(8)->create();
+        Article::factory(5)->create();
+        Testimonial::factory(6)->create();
+        Experience::factory(5)->create();
+        DatabaseSeeder::seederCreate();
+        Service::factory(2)->create();
+        Skill::factory(30)->create();
     }
-
 }

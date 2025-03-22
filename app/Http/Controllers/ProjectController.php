@@ -14,7 +14,7 @@ class ProjectController extends Controller
     public function index()
     {
         // Retrieve projects where the user_id equals 2 (the second user)
-        $projects = Project::where('user_id', 2)->get();
+        $projects = Project::get();
 
         return Inertia::render('projects/index', [
             'projects' => $projects,
@@ -50,7 +50,7 @@ class ProjectController extends Controller
             'project'  => $project,
             'projects' => $projects,
         ]);
-    
+
     }
 
     /**

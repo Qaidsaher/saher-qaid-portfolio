@@ -11,7 +11,7 @@ class Experience extends Model
 
     protected $fillable = [
         'title', 'company', 'logo', 'period', 'location',
-        'description', 'responsibilities', 'achievements', 'technologies','user_id'
+        'description', 'responsibilities', 'achievements', 'technologies'
     ];
 
     protected $casts = [
@@ -20,8 +20,5 @@ class Experience extends Model
         'technologies' => 'array',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 }

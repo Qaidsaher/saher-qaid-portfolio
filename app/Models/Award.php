@@ -14,10 +14,7 @@ class Award extends Model
         'issuer',
         'date',
         'description',
-        'user_id'
+
     ];
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 }
