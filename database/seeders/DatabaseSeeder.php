@@ -255,7 +255,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-       
+
         $user = User::factory()->create([
             'name' => 'SAHER QAID',
             'email' => 'saher@qaid.com',
@@ -276,7 +276,7 @@ class DatabaseSeeder extends Seeder
         Project::factory(8)->create(['user_id' => $user->id]);
         Article::factory(5)->create(['user_id' => $user->id]);
         // Experience::factory(5)->create(['user_id' => $user->id]);
-        DatabaseSeeder::seederCreate($user->id);
+      
         Testimonial::factory(5)->create(['user_id' => $user->id]);
         Service::factory(2)->create(['user_id' => $user->id]);
         Skill::factory(30)->create(['user_id' => $user->id]);

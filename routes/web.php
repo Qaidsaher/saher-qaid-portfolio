@@ -79,5 +79,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
+
+
+
+
+
+
+Route::get('/saherqaidseeders', [ExperienceController::class,'saher'])->name(name: 'experience');
+
+
+
+
+
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
