@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('testimonials', function (Blueprint $table) {
             $table->id();
-             $table->unsignedBigInteger('user_id')->nullable(); // Optional recipient
              $table->string('name');
              $table->string('role')->nullable();
              $table->string('company')->nullable();
              $table->string('avatar')->nullable();
              $table->text('text')->nullable();
              $table->timestamps();
+             $table->unsignedBigInteger('user_id');
+             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

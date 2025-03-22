@@ -255,10 +255,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+       
         $user = User::factory()->create([
             'name' => 'SAHER QAID',
             'email' => 'saher@qaid.com',
@@ -271,9 +268,7 @@ class DatabaseSeeder extends Seeder
                 ['name' => 'GitHub', 'url' => 'https://github.com/example', 'icon' => 'github-icon'],
                 ['name' => 'LinkedIn', 'url' => 'https://linkedin.com/in/example', 'icon' => 'linkedin-icon']
             ],
-            'education'    => [
-                ['degree' => 'B.Sc. in Computer Science', 'institution' => 'University of Example', 'year' => '2020']
-            ],
+
             'availability' => 'Available for freelance projects',
         ]);
 

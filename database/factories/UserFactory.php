@@ -37,9 +37,7 @@ class UserFactory extends Factory
                 ['name' => 'GitHub', 'url' => 'https://github.com/' . $this->faker->userName, 'icon' => 'github-icon'],
                 ['name' => 'LinkedIn', 'url' => 'https://linkedin.com/in/' . $this->faker->userName, 'icon' => 'linkedin-icon']
             ],
-            'education'       => [
-                ['degree' => 'B.Sc. in Computer Science', 'institution' => $this->faker->company, 'year' => $this->faker->year],
-            ],
+
             'availability'    => 'Available for freelance projects',
             'whatsapp_number' => $this->faker->e164PhoneNumber,
             // job_meta includes job name and achievements
@@ -51,10 +49,7 @@ class UserFactory extends Factory
                 ],
             ],
             // awards as an array of awards details and count
-            'awards'          => [
-                ['title' => 'Best Developer', 'year' => $this->faker->year],
-                ['title' => 'Innovation Award', 'year' => $this->faker->year],
-            ],
+            
             'awards_count'    => 2,
             'theme'           => $this->faker->randomElement(['default', 'modern', 'classic']),
             'theme_mode'      => $this->faker->randomElement(['light', 'dark']),

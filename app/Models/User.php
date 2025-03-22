@@ -25,11 +25,9 @@ class User extends Authenticatable
         'bio',
         'phone_number',
         'links',
-        'education',
         'availability',
         'whatsapp_number',
         'job_meta',
-        'awards',
         'awards_count',
         'theme',
         'theme_mode',
@@ -38,9 +36,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'links'       => 'array',
-        'education'   => 'array',
         'job_meta'    => 'array',
-        'awards'      => 'array',
         'seo_keywords' => 'array',
     ];
     /**
@@ -95,4 +91,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Skill::class);
     }
+    public function awards()
+    {
+        return $this->hasMany(Award::class);
+    }
+
+    public function certificates(){
+        return $this->hasMany(Certification::class);
+     }
+     public function education(){
+        return $this->hasMany(Education::class);
+     }
+
 }

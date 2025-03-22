@@ -23,8 +23,9 @@ return new class extends Migration
             $table->json('achievements')->nullable();
             $table->json('technologies')->nullable();
             $table->timestamps();
-            $table->unsignedBigInteger(column: 'user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 

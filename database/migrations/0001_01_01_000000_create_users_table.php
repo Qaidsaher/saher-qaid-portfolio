@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             // JSON columns for links and education data
             $table->json('links')->nullable();       // e.g., social accounts, GitHub, LinkedIn
-            $table->json('education')->nullable();     // e.g., list of degrees, institutions, years
             $table->string('availability')->nullable(); // e.g., "Available for freelance projects"
 
             // New extra fields
@@ -31,7 +30,6 @@ return new class extends Migration
             // job_meta will hold job name, achievements, and any meta keys as JSON
             $table->json('job_meta')->nullable();
             // awards as JSON (an array of award details) and a numeric count
-            $table->json('awards')->nullable();
             $table->integer('awards_count')->nullable();
             // Theme preferences for UI and SEO keywords as JSON
             $table->string('theme')->nullable();
