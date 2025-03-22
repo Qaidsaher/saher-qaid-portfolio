@@ -17,22 +17,22 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/run-seeds', function (Request $request) {
     // Retrieve the environment from the request query parameter, default to 'production'
-    $env = $request->query('env', 'production');
+    // $env = $request->query('env', 'production');
 
-    // Define allowed environments
-    $allowedEnvs = ['development', 'staging', 'production'];
+    // // Define allowed environments
+    // $allowedEnvs = ['development', 'staging', 'production'];
 
-    // Validate the provided environment
-    if (!in_array($env, $allowedEnvs)) {
-        abort(403, 'Unauthorized environment specified.');
-    }
+    // // Validate the provided environment
+    // if (!in_array($env, $allowedEnvs)) {
+    //     abort(403, 'Unauthorized environment specified.');
+    // }
 
-    // If targeting production, enforce stricter authorization
-    if ($env === 'production') {
-        if (!Auth::check() ) {
-            abort(403, 'Unauthorized action.');
-        }
-    }
+    // // If targeting production, enforce stricter authorization
+    // if ($env === 'production') {
+    //     if (!Auth::check() ) {
+    //         abort(403, 'Unauthorized action.');
+    //     }
+    // }
 
     // Optional: You can check that the current app environment matches the target if needed.
     // if (app()->environment() !== $env) {
@@ -42,7 +42,7 @@ Route::get('/run-seeds', function (Request $request) {
     // Run the seeder
     Artisan::call('db:seed');
 
-    return "Seeding complete on the {$env} environment!";
+    return "Seeding complete on the environment!";
 });
 Route::resource('/articles', ArticleController::class);
 Route::resource( '/projects',ProjectController::class);
