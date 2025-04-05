@@ -22,67 +22,66 @@ import {
   FileText,
   Users,
   Globe,
-  GraduationCap, ClipboardCheck,
   Medal,
 } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/admin/dashboard',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Website',
-        href: '/admin/website',
-        icon: Globe, // Using Globe as an example icon for website pages
-    },
-    {
-        title: 'Projects',
-        href: '/admin/projects',
-        icon: Folder,
-    },
-    {
-        title: 'Experiences',
-        href: '/admin/experiences',
-        icon: Briefcase,
-    },
-    {
-        title: 'Skills',
-        href: '/admin/skills',
-        icon: Code,
-    },
-    {
-        title: 'Services',
-        href: '/admin/services',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Awards',
-        href: '/admin/awards',
-        icon: Medal,
-    },
-    {
-        title: 'Certificates',
-        href: '/admin/certifications',
-        icon: Award,
-    },
-    {
-        title: 'Educations',
-        href: '/admin/educations',
-        icon: BookOpen,
-    },
-    {
-        title: 'Articles',
-        href: '/admin/articles',
-        icon: FileText,
-    },
-    {
-        title: 'Testimonials',
-        href: '/admin/testimonials',
-        icon: Users,
-    },
+  {
+    title: 'Dashboard',
+    href: route('admin.dashboard'),
+    icon: LayoutGrid,
+  },
+  {
+    title: 'Website',
+    href: route('admin.website'),
+    icon: Globe,
+  },
+  {
+    title: 'Projects',
+    href: route('admin.projects'),
+    icon: Folder,
+  },
+  {
+    title: 'Experiences',
+    href: route('admin.experiences'),
+    icon: Briefcase,
+  },
+  {
+    title: 'Skills',
+    href: route('admin.skills'),
+    icon: Code,
+  },
+  {
+    title: 'Services',
+    href: route('admin.services'),
+    icon: LayoutGrid,
+  },
+  {
+    title: 'Awards',
+    href: route('admin.awards'),
+    icon: Medal,
+  },
+  {
+    title: 'Certificates',
+    href: route('admin.certifications'),
+    icon: Award,
+  },
+  {
+    title: 'Educations',
+    href: route('admin.educations'),
+    icon: BookOpen,
+  },
+  {
+    title: 'Articles',
+    href: route('admin.articles'),
+    icon: FileText,
+  },
+  {
+    title: 'Testimonials',
+    href: route('admin.testimonials'),
+    icon: Users,
+  },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -105,7 +104,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/admin/dashboard" prefetch>
+              <Link href={route('admin.dashboard')} prefetch>
                 <AppLogo />
               </Link>
             </SidebarMenuButton>
@@ -118,7 +117,8 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
+        {/* Optionally use footer navigation:
+        <NavFooter items={footerNavItems} className="mt-auto" /> */}
         <NavUser />
       </SidebarFooter>
     </Sidebar>
