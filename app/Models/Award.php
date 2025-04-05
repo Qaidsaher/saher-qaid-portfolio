@@ -14,7 +14,6 @@ class Award extends Model
         'issuer',
         'date',
         'description',
-
     ];
 
 }

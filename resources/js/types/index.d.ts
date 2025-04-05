@@ -40,3 +40,29 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Website {
+    id: number;
+    websiteName: string;
+    badge: string;
+    heroTitle: string;
+    heroDescription: string;
+    ctaPrimaryText: string;
+    ctaPrimaryLink: string;
+    ctaSecondaryText: string;
+    ctaSecondaryLink: string;
+    heroImageSrc: string;
+    availableForProjectsText: string;
+    experienceText: string;
+    socialLinks?: Record<string, string> | null;
+    status: string;
+    responseTime: string;
+    preferredProjects: string;
+    email: string;
+    phone: string;
+    location: string;
+    number_of_experiences: number;
+    created_at: string;
+    updated_at: string;
+  }
+

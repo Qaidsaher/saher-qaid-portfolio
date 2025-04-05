@@ -1,3 +1,5 @@
+ 
+
 import React, { useState, useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import UserLayout from "@/layouts/user-layout";
@@ -21,15 +23,27 @@ interface ProjectType {
   title: string;
   description: string;
   image: string;
-  technologies: string[];
-  category: string;
+  // These fields might come as an array, a JSON-encoded string, or null.
+  technologies?: string | string[] | null;
+  category?: string | string[] | null;
   date: string;
-  demoUrl: string | null;
+  demo_url: string | null;
 }
 
 // Extend with a record signature so that our custom type satisfies Inertia's PageProps constraint.
 interface CustomPageProps extends Record<string, any> {
   projects: ProjectType[];
+}
+
+// Helper function to ensure a field is returned as an array.
+function parseField(field: string | string[] | null | undefined): string[] {
+  if (!field) return [];
+  if (Array.isArray(field)) return field;
+  try {
+    return JSON.parse(field) as string[];
+  } catch {
+    return field ? [field] : [];
+  }
 }
 
 export default function Index() {
@@ -45,15 +59,22 @@ export default function Index() {
       const matchesSearch =
         project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         project.description.toLowerCase().includes(searchTerm.toLowerCase());
+      // Parse the project's category into an array and check if any match.
+      const projectCategories = parseField(project.category);
       const matchesCategory =
-        selectedCategory === "all" || project.category === selectedCategory;
+        selectedCategory === "all" || projectCategories.includes(selectedCategory);
       return matchesSearch && matchesCategory;
     });
     setFilteredProjects(filtered);
   }, [searchTerm, selectedCategory, projects]);
 
-  // Extract distinct categories
-  const categories = ["all", ...new Set(projects.map((project: ProjectType) => project.category))];
+  // Extract distinct categories from all projects.
+  const categories = [
+    "all",
+    ...new Set(
+      projects.flatMap((project: ProjectType) => parseField(project.category))
+    ),
+  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:px-6 md:py-10">
@@ -62,8 +83,8 @@ export default function Index() {
           Project Portfolio
         </h1>
         <p className="text-muted-foreground max-w-2xl">
-          A showcase of my work across various domains including web development, mobile applications,
-          and AI research.
+          A showcase of my work across various domains including web development,
+          mobile applications, and AI research.
         </p>
       </div>
 
@@ -100,64 +121,80 @@ export default function Index() {
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredProjects.map((project: ProjectType) => (
-            <Card key={project.id} className="glass-card overflow-hidden flex flex-col">
-              <div className="aspect-video relative overflow-hidden">
-                <img
-                  src={project.image || "/placeholder.svg"}
-                  alt={project.title}
-                  width={600}
-                  height={400}
-                  className="object-cover w-full h-full transition-transform hover:scale-105"
-                />
-              </div>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle>{project.title}</CardTitle>
-                    <CardDescription>{project.date}</CardDescription>
+          {filteredProjects.map((project: ProjectType) => {
+            // Parse the technologies and category fields.
+            const techs = parseField(project.technologies);
+            const projectCategories = parseField(project.category);
+            // Show only two category badges.
+            const displayedCategories = projectCategories.slice(0, 2);
+            const extraCount = projectCategories.length - displayedCategories.length;
+            return (
+              <Card key={project.id} className="glass-card overflow-hidden flex flex-col pt-0">
+                <div className="aspect-video relative overflow-hidden">
+                  <img
+                    src={project.image ? `/storage/${project.image}` : "/placeholder.svg"}
+                    alt={project.title}
+                    width={600}
+                    height={400}
+                    className="object-cover w-full h-full transition-transform hover:scale-105"
+                  />
+                </div>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle>{project.title}</CardTitle>
+                      <CardDescription>{project.date}</CardDescription>
+                    </div>
+                    <div className="flex gap-1">
+                      {displayedCategories.map((cat, index) => (
+                        <Badge key={index} className="capitalize">
+                          {cat}
+                        </Badge>
+                      ))}
+                      {extraCount > 0 && (
+                        <Badge className="capitalize">+{extraCount}</Badge>
+                      )}
+                    </div>
                   </div>
-                  <Badge className="capitalize">{project.category}</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-1">
-                <p className="mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech) => (
-                    <Badge key={tech} variant="secondary">
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-              <CardFooter>
-                <div className="flex gap-2 w-full">
-                  <Link href={`/projects/${project.id}`} className="flex-1">
-                    <Button variant="default" className="w-full">
-                      View Details
-                    </Button>
-                  </Link>
-                  {project.demoUrl && (
-                    <Link
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1"
-                    >
-                      <Button variant="outline" className="w-full">
-                        Live Demo
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <p className="mb-4">{project.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {techs.map((tech: string, index: number) => (
+                      <Badge key={index} variant="secondary">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <div className="flex gap-2 w-full">
+                    <Link href={`/projects/${project.id}`} className="flex-1">
+                      <Button variant="default" className="w-full">
+                        View Details
                       </Button>
                     </Link>
-                  )}
-                </div>
-              </CardFooter>
-            </Card>
-          ))}
+                    {project.demo_url && (
+                      <Link
+                        href={project.demo_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1"
+                      >
+                        <Button variant="outline" className="w-full">
+                          Live Demo
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                </CardFooter>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
 
-// Assign the global layout to this page.
 Index.layout = (page: React.ReactNode) => <UserLayout>{page}</UserLayout>;

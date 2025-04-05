@@ -1,4 +1,4 @@
-"use client";
+ 
 
 import React, { useState } from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
@@ -100,10 +100,10 @@ export default function Articles() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Card className="glass-card overflow-hidden flex flex-col">
+                  <Card className="glass-card overflow-hidden flex flex-col pt-0">
                     <div className="aspect-video relative overflow-hidden">
                       <img
-                        src={article.image || "/placeholder.svg"}
+                        src={`/storage/${article.image}`}
                         alt={article.title}
                         className="object-cover w-full h-full transition-transform hover:scale-105"
                       />

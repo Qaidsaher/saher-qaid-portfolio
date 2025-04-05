@@ -1,5 +1,4 @@
-"use client";
-
+ 
 import { Head, Link, usePage } from "@inertiajs/react";
 import UserLayout from "@/layouts/user-layout";
 import { motion } from "framer-motion";
@@ -29,9 +28,9 @@ interface Experience {
   period: string;
   location: string;
   description: string;
-  responsibilities: string[];
-  achievements: string[];
-  technologies: string[];
+  responsibilities: string[] | null;
+  achievements: string[] | null;
+  technologies: string[] | null;
 }
 
 interface Education {
@@ -42,7 +41,7 @@ interface Education {
   period: string;
   location: string;
   description: string;
-  courses: string[];
+  courses: string[] | null;
 }
 
 interface Certification {
@@ -63,10 +62,10 @@ interface Award {
 
 // Extend with a record signature for Inertia props.
 interface CustomPageProps extends Record<string, any> {
-  experiences: Experience[];
-  educations: Education[];
-  certifications: Certification[];
-  awards: Award[];
+  experiences?: Experience[] | null;
+  educations?: Education[] | null;
+  certifications?: Certification[] | null;
+  awards?: Award[] | null;
 }
 
 // Define a simple Framer Motion fade-in variant.
@@ -76,9 +75,13 @@ const fadeInVariant = {
 };
 
 export default function ExperienceIndex() {
-  // Retrieve the data passed from the backend via Inertia.
-  const { experiences, educations, certifications, awards } =
-    usePage<CustomPageProps>().props;
+  // Retrieve data from Inertia; set defaults to empty arrays if null.
+  const {
+    experiences = [],
+    educations = [],
+    certifications = [],
+    awards = [],
+  } = usePage<CustomPageProps>().props;
 
   return (
     <UserLayout>
@@ -97,7 +100,7 @@ export default function ExperienceIndex() {
             Professional Experience
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            My career journey, education, and contributions.
+            My career journey, education, certifications, and achievements.
           </p>
         </motion.div>
 
@@ -105,13 +108,13 @@ export default function ExperienceIndex() {
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="work">Work</TabsTrigger>
             <TabsTrigger value="education">Education</TabsTrigger>
-            <TabsTrigger value="awards">Achievements</TabsTrigger>
+            <TabsTrigger value="awards">Certificat.. & Awards</TabsTrigger>
           </TabsList>
 
-          {/* WORK Tab: Display Work Experience from the database */}
+          {/* WORK Tab: Display Work Experience */}
           <TabsContent value="work">
-            {experiences && experiences.length > 0 ? (
-              experiences.map((job: Experience) => (
+            {(experiences || []).length > 0 ? (
+              (experiences ?? []).map((job: Experience) => (
                 <motion.div
                   key={job.id}
                   initial="hidden"
@@ -123,17 +126,37 @@ export default function ExperienceIndex() {
                   <Card className="glass-card">
                     <CardHeader>
                       <CardTitle>{job.title}</CardTitle>
-                      <CardDescription>{job.company}</CardDescription>
+                      <CardDescription>
+                        {job.company} • {job.period}
+                      </CardDescription>
+                      <p className="text-sm text-muted-foreground">
+                        {job.location}
+                      </p>
                     </CardHeader>
                     <CardContent>
-                      <p>{job.description}</p>
-                      <ul className="mt-2 list-disc pl-6 text-sm">
-                        {job.responsibilities.map((res, i) => (
-                          <li key={i}>{res}</li>
-                        ))}
-                      </ul>
+                      <p className="mb-2">{job.description}</p>
+                      {((job.responsibilities || []).length > 0) && (
+                        <div className="mb-2">
+                          <strong>Responsibilities:</strong>
+                          <ul className="mt-1 list-disc pl-6 text-sm">
+                            {(job.responsibilities || []).map((res, i) => (
+                              <li key={i}>{res}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {((job.achievements || []).length > 0) && (
+                        <div className="mb-2">
+                          <strong>Achievements:</strong>
+                          <ul className="mt-1 list-disc pl-6 text-sm">
+                            {(job.achievements || []).map((ach, i) => (
+                              <li key={i}>{ach}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                       <div className="flex gap-2 mt-3 flex-wrap">
-                        {job.technologies.map((tech) => (
+                        {(job.technologies || []).map((tech) => (
                           <Badge key={tech}>{tech}</Badge>
                         ))}
                       </div>
@@ -146,10 +169,10 @@ export default function ExperienceIndex() {
             )}
           </TabsContent>
 
-          {/* EDUCATION Tab: Display Education Data from the database */}
+          {/* EDUCATION Tab: Display Education Data */}
           <TabsContent value="education">
-            {educations && educations.length > 0 ? (
-              educations.map((edu: Education) => (
+            {(educations || []).length > 0 ? (
+              (educations || []).map((edu: Education) => (
                 <motion.div
                   key={edu.id}
                   initial="hidden"
@@ -169,7 +192,7 @@ export default function ExperienceIndex() {
                     <CardContent>
                       <p>{edu.description}</p>
                       <div className="flex gap-2 mt-3 flex-wrap">
-                        {edu.courses.map((course) => (
+                        {(edu.courses || []).map((course) => (
                           <Badge key={course} variant="outline">
                             {course}
                           </Badge>
@@ -203,7 +226,7 @@ export default function ExperienceIndex() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {certifications.map((cert: Certification) => (
+                    {(certifications ?? []).map((cert: Certification) => (
                       <div key={cert.id} className="mb-4">
                         <strong>{cert.name}</strong>
                         <div className="text-sm text-muted-foreground">
@@ -229,7 +252,7 @@ export default function ExperienceIndex() {
             )}
 
             {/* Awards */}
-            {awards && awards.length > 0 ? (
+            {(awards?.length ?? 0) > 0 ? (
               <motion.div
                 initial="hidden"
                 animate="visible"
@@ -245,7 +268,7 @@ export default function ExperienceIndex() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {awards.map((award: Award) => (
+                    {(awards || []).map((award: Award) => (
                       <div key={award.id} className="mb-4">
                         <strong>{award.name}</strong>
                         <div className="text-sm text-muted-foreground">

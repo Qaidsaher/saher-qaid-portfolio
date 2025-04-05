@@ -1,21 +1,23 @@
 import { useState, useEffect } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Menu, X } from "lucide-react";
 import AppearanceToggleDropdown from "./appearance-dropdown";
-
+import { type SharedData } from '@/types';
 const navItems = [
     { name: "Home", href: "/" },
     { name: "Projects", href: "/projects" },
     { name: "Articles", href: "/articles" },
     { name: "Skills", href: "/skills" },
-    { name: "Experience", href: "/experience" },
+    { name: "Experience", href: "/experiences" },
+    { name: "Services", href: "/services" },
     { name: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
+    const { website } = usePage<SharedData>().props;
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -39,7 +41,8 @@ export default function Header() {
         >
             <div className="max-w-7xl mx-auto px-6 flex h-16 items-center justify-between ">
                 <Link href="/" className="flex items-center space-x-2">
-                    <span className="text-xl font-bold">SaherQ Dev</span>
+                    <span className="text-xl font-bold">
+                        {((website as { websiteName: string })?.websiteName) ?? "SaherQ Dev"}</span>
                 </Link>
 
                 <nav className="hidden md:flex items-center space-x-6">

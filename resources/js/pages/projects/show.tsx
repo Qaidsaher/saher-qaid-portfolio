@@ -1,4 +1,4 @@
-"use client";
+ 
 
 import React from "react";
 import { Link, usePage } from "@inertiajs/react";
@@ -45,20 +45,21 @@ export interface ProjectType {
   date: string;
   duration?: string;
   teamSize?: number;
-  type?: string;
-  technologies: string[];
-  category: string;
+  type?: string | null;
+  // These fields may come as JSON strings or as arrays.
+  technologies: string | string[];
+  category: string | string[];
   image?: string;
   challenge?: string;
   solution?: string;
   results?: string;
   client?: string;
-  demoUrl?: string;
-  githubUrl?: string;
-  features?: FeatureType[];
-  process?: ProcessStep[];
-  gallery?: GalleryImage[];
-  role?: string;
+  demo_url?: string;
+  github_url?: string;
+  features?: string | FeatureType[];
+  process?: string | ProcessStep[];
+  gallery?: string | GalleryImage[];
+  role?: string | null;
 }
 
 // Extend with a record signature so our custom type satisfies Inertia's PageProps constraint.
@@ -67,9 +68,30 @@ interface CustomPageProps extends Record<string, any> {
   projects: ProjectType[];
 }
 
+// Helper function to convert a field to an array if needed.
+function parseArrayField<T>(field: string | T[] | null | undefined): T[] {
+  if (!field) return [];
+  if (typeof field === "string") {
+    try {
+      return JSON.parse(field) as T[];
+    } catch (error) {
+      console.error("Error parsing field:", field, error);
+      return [];
+    }
+  }
+  return field;
+}
+
 export default function Show() {
   // Retrieve project and projects from Inertia props.
   const { project, projects } = usePage<CustomPageProps>().props;
+
+  // Parse fields that may be stored as JSON strings.
+  const technologies: string[] = parseArrayField<string>(project.technologies);
+  const categories: string[] = parseArrayField<string>(project.category);
+  const features: FeatureType[] = parseArrayField<FeatureType>(project.features);
+  const processSteps: ProcessStep[] = parseArrayField<ProcessStep>(project.process);
+  const gallery: GalleryImage[] = parseArrayField<GalleryImage>(project.gallery);
 
   // Compute the current index and navigation items.
   const currentIndex = projects.findIndex((p: ProjectType) => p.id === project.id);
@@ -110,7 +132,7 @@ export default function Show() {
       <div className="grid gap-6 md:grid-cols-2 md:gap-12 mb-12">
         <div className="flex flex-col justify-center">
           <div className="space-y-2 mb-4">
-            <Badge className="mb-2">{project.category}</Badge>
+            <Badge className="mb-2">{categories.join(", ")}</Badge>
             <h1 className="text-3xl md:text-4xl font-bold">{project.title}</h1>
             <p className="text-muted-foreground">
               {project.shortDescription || project.description}
@@ -137,32 +159,24 @@ export default function Show() {
           </div>
 
           <div className="flex flex-wrap gap-3 mb-6">
-            {project.technologies.map((tech: string) => (
-              <Badge key={tech} variant="secondary">
+            {technologies.map((tech, index) => (
+              <Badge key={index} variant="secondary">
                 {tech}
               </Badge>
             ))}
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {project.demoUrl && (
-              <Link
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+            {project.demo_url && (
+              <Link href={project.demo_url} target="_blank" rel="noopener noreferrer">
                 <Button className="gap-2">
                   <ExternalLink className="h-4 w-4" />
                   Live Demo
                 </Button>
               </Link>
             )}
-            {project.githubUrl && (
-              <Link
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+            {project.github_url && (
+              <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" className="gap-2">
                   <Github className="h-4 w-4" />
                   View Code
@@ -174,7 +188,7 @@ export default function Show() {
 
         <div className="relative aspect-video rounded-xl overflow-hidden border border-border/60 shadow-lg">
           <img
-            src={project.image || "/placeholder.svg?height=400&width=600"}
+            src={project.image ? `/storage/${project.image}` : "/placeholder.svg?height=400&width=600"}
             alt={project.title}
             className="object-cover w-full h-full"
           />
@@ -265,7 +279,7 @@ export default function Show() {
         <TabsContent value="features">
           <h2 className="text-2xl font-bold mb-6">Key Features</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {(project.features || defaultFeatures).map((feature: FeatureType, index: number) => (
+            {features.map((feature, index) => (
               <Card key={index} className="overflow-hidden border border-border/60">
                 <div className="p-1 bg-primary/10 flex items-center justify-center">
                   <img
@@ -288,12 +302,12 @@ export default function Show() {
         <TabsContent value="process">
           <h2 className="text-2xl font-bold mb-6">Development Process</h2>
           <div className="space-y-12">
-            {(project.process || defaultProcess).map((step: ProcessStep, index: number) => (
+            {processSteps.map((step, index) => (
               <div key={index} className="relative pl-10 pb-4">
                 <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold">
                   {index + 1}
                 </div>
-                {index < (project.process || defaultProcess).length - 1 && (
+                {index < processSteps.length - 1 && (
                   <div className="absolute left-4 top-8 bottom-0 w-px bg-border"></div>
                 )}
                 <div>
@@ -301,7 +315,7 @@ export default function Show() {
                   <p className="text-muted-foreground mb-4">{step.description}</p>
                   {step.activities && (
                     <div className="pl-4 border-l-2 border-muted space-y-2">
-                      {step.activities.map((activity: string, actIndex: number) => (
+                      {step.activities.map((activity, actIndex) => (
                         <p key={actIndex} className="text-sm">
                           • {activity}
                         </p>
@@ -317,7 +331,7 @@ export default function Show() {
         <TabsContent value="gallery">
           <h2 className="text-2xl font-bold mb-6">Project Gallery</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {(project.gallery || defaultGallery).map((image: GalleryImage, index: number) => (
+            {gallery.map((image, index) => (
               <div
                 key={index}
                 className="relative aspect-video rounded-lg overflow-hidden border border-border/60"
@@ -343,16 +357,16 @@ export default function Show() {
         <h2 className="text-2xl font-bold mb-6">Related Projects</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects
-            .filter((p: ProjectType) => p.id !== project.id && p.category === project.category)
+            .filter((p: ProjectType) => p.id !== project.id)
             .slice(0, 3)
             .map((relatedProject: ProjectType) => (
               <Card
                 key={relatedProject.id}
-                className="overflow-hidden flex flex-col group border border-border/60"
+                className="overflow-hidden flex flex-col group border border-border/60 pt-0"
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
-                    src={relatedProject.image || "/placeholder.svg?height=400&width=600"}
+                    src={relatedProject.image ? `/storage/${relatedProject.image}` : "/placeholder.svg?height=400&width=600"}
                     alt={relatedProject.title}
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -377,127 +391,4 @@ export default function Show() {
   );
 }
 
-// Default content when detailed project data isn't available
-const defaultFeatures: FeatureType[] = [
-  {
-    title: "Responsive Design",
-    description:
-      "Fully responsive interface that works seamlessly across all devices and screen sizes.",
-    icon: "/placeholder.svg?height=80&width=80",
-  },
-  {
-    title: "Real-time Updates",
-    description:
-      "Instant data synchronization with WebSockets for a collaborative experience.",
-    icon: "/placeholder.svg?height=80&width=80",
-  },
-  {
-    title: "Advanced Analytics",
-    description:
-      "Comprehensive data visualization and reporting capabilities.",
-    icon: "/placeholder.svg?height=80&width=80",
-  },
-  {
-    title: "User Authentication",
-    description:
-      "Secure authentication system with role-based access control.",
-    icon: "/placeholder.svg?height=80&width=80",
-  },
-  {
-    title: "API Integration",
-    description:
-      "Seamless integration with third-party services and APIs.",
-    icon: "/placeholder.svg?height=80&width=80",
-  },
-  {
-    title: "Offline Support",
-    description:
-      "Progressive Web App capabilities for offline functionality.",
-    icon: "/placeholder.svg?height=80&width=80",
-  },
-];
-
-const defaultProcess: ProcessStep[] = [
-  {
-    title: "Research & Discovery",
-    description:
-      "Understanding project requirements, target audience, and business objectives.",
-    activities: [
-      "Stakeholder interviews",
-      "Competitive analysis",
-      "User persona development",
-      "Requirements documentation",
-    ],
-  },
-  {
-    title: "UX/UI Design",
-    description: "Creating wireframes, mockups, and interactive prototypes.",
-    activities: [
-      "Information architecture",
-      "Wireframing",
-      "UI design system creation",
-      "Prototyping and user testing",
-    ],
-  },
-  {
-    title: "Development",
-    description:
-      "Building the frontend and backend components following best practices.",
-    activities: [
-      "Frontend development with React",
-      "Backend implementation",
-      "Database design and setup",
-      "API development and integration",
-    ],
-  },
-  {
-    title: "Testing & QA",
-    description: "Ensuring quality and reliability through thorough testing.",
-    activities: [
-      "Unit and integration testing",
-      "Cross-browser compatibility testing",
-      "Performance optimization",
-      "Security testing",
-    ],
-  },
-  {
-    title: "Deployment & Maintenance",
-    description: "Launching the application and providing ongoing support.",
-    activities: [
-      "CI/CD pipeline setup",
-      "Production deployment",
-      "Monitoring and analytics integration",
-      "Post-launch support and maintenance",
-    ],
-  },
-];
-
-const defaultGallery: GalleryImage[] = [
-  {
-    url: "/placeholder.svg?height=400&width=600",
-    caption: "Dashboard overview showing key metrics",
-  },
-  {
-    url: "/placeholder.svg?height=400&width=600",
-    caption: "User profile management interface",
-  },
-  {
-    url: "/placeholder.svg?height=400&width=600",
-    caption: "Data visualization and reporting",
-  },
-  {
-    url: "/placeholder.svg?height=400&width=600",
-    caption: "Mobile responsive view",
-  },
-  {
-    url: "/placeholder.svg?height=400&width=600",
-    caption: "Settings configuration screen",
-  },
-  {
-    url: "/placeholder.svg?height=400&width=600",
-    caption: "Authentication and security features",
-  },
-];
-
-// Assign the global layout for this page.
 Show.layout = (page: React.ReactNode) => <UserLayout>{page}</UserLayout>;

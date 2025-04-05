@@ -257,21 +257,21 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
 
-        $user = User::factory()->create([
-            'name' => 'SAHER QAID',
-            'email' => 'saher@qaid.com',
-            'password' => Hash::make('saher@qaid.com'),
-            'avatar'       => 'https://example.com/avatar.png',
-            'about'        => 'Passionate full-stack developer with a focus on building scalable web applications.',
-            'bio'          => 'I have over 5 years of experience in modern web development using Laravel, React, and Vue.',
-            'phone_number' => '123-456-7890',
-            'links'        => [
-                ['name' => 'GitHub', 'url' => 'https://github.com/example', 'icon' => 'github-icon'],
-                ['name' => 'LinkedIn', 'url' => 'https://linkedin.com/in/example', 'icon' => 'linkedin-icon']
-            ],
+        // $user = User::factory()->create([
+        //     'name' => 'SAHER QAID',
+        //     'email' => 'saherqaid2020@gmail.com',
+        //     'password' => Hash::make('saherqaid2020@gmail.com'),
+        //     'avatar'       => 'https://example.com/avatar.png',
+        //     'about'        => 'Passionate full-stack developer with a focus on building scalable web applications.',
+        //     'bio'          => 'I have over 5 years of experience in modern web development using Laravel, React, and Vue.',
+        //     'phone_number' => '123-456-7890',
+        //     'links'        => [
+        //         ['name' => 'GitHub', 'url' => 'https://github.com/example', 'icon' => 'github-icon'],
+        //         ['name' => 'LinkedIn', 'url' => 'https://linkedin.com/in/example', 'icon' => 'linkedin-icon']
+        //     ],
 
-            'availability' => 'Available for freelance projects',
-        ]);
+        //     'availability' => 'Available for freelance projects',
+        // ]);
 
         // Create related records for this user
         Project::factory(8)->create();
@@ -279,7 +279,7 @@ class DatabaseSeeder extends Seeder
         Testimonial::factory(6)->create();
         Experience::factory(5)->create();
         DatabaseSeeder::seederCreate();
-        Service::factory(2)->create();
+        // Service::factory(2)->create();
         Skill::factory(30)->create();
     }
 }

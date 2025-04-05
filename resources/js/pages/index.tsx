@@ -1,4 +1,4 @@
-"use client";
+  
 
 import { useEffect, useRef, useState } from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
@@ -31,6 +31,7 @@ import {
     Lightbulb,
     Smartphone,
     Palette,
+
 } from "lucide-react";
 
 // Layout and Types
@@ -41,12 +42,32 @@ import Image from "@/components/image";
 // ---------------------
 // Extend with Inertia props interface.
 // ---------------------
+
 interface CustomPageProps extends Record<string, any> {
+    hereInformation: {
+        badge?: string;
+        heroTitle?: string;
+        heroDescription?: string;
+        ctaPrimaryText?: string;
+        ctaPrimaryLink?: string;
+        ctaSecondaryText?: string;
+        ctaSecondaryLink?: string;
+        heroImageSrc?: string;
+        availableForProjectsText?: string;
+        experienceText?: string;
+        socialLinks?: {
+            github?: string;
+            linkedin?: string;
+            twitter?: string;
+            email?: string;
+            whatsapp?: string;
+        };
+    };
     stats: { value: string; label: string }[];
     services: {
         title: string;
         description: string;
-        icon: React.ReactNode;
+        icon: string; // using a string identifier from the database
         link: string;
     }[];
     featuredProjects: {
@@ -55,8 +76,8 @@ interface CustomPageProps extends Record<string, any> {
         description: string;
         type: string;
         image: string;
-        technologies: string[];
-        category: string;
+        technologies?: string | string[] | null;
+        category?: string | string[] | null;
         demoUrl: string | null;
         githubUrl: string | null;
     }[];
@@ -82,6 +103,15 @@ interface CustomPageProps extends Record<string, any> {
     }[];
 }
 
+function parseField(field: string | string[] | null | undefined): string[] {
+    if (!field) return [];
+    if (Array.isArray(field)) return field;
+    try {
+        return JSON.parse(field) as string[];
+    } catch {
+        return field ? [field] : [];
+    }
+}
 // ---------------------
 // Skill Card Component
 // ---------------------
@@ -91,6 +121,30 @@ interface SkillCardProps {
     skills: { name: string; level: number }[];
     delay?: number;
 }
+// Custom WhatsApp Icon component using an SVG from a free source
+const WhatsappIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+        className={`w-8 h-8  ${props.className}`}
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="none"
+        viewBox="0 0 24 24"
+        {...props}
+    >
+        <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="M12 4a8 8 0 0 0-6.895 12.06l.569.718-.697 2.359 2.32-.648.379.243A8 8 0 1 0 12 4ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.96 9.96 0 0 1-5.016-1.347l-4.948 1.382 1.426-4.829-.006-.007-.033-.055A9.958 9.958 0 0 1 2 12Z"
+            clipRule="evenodd"
+        />
+        <path
+            fill="currentColor"
+            d="M16.735 13.492c-.038-.018-1.497-.736-1.756-.83a1.008 1.008 0 0 0-.34-.075c-.196 0-.362.098-.49.291-.146.217-.587.732-.723.886-.018.02-.042.045-.057.045-.013 0-.239-.093-.307-.123-1.564-.68-2.751-2.313-2.914-2.589-.023-.04-.024-.057-.024-.057.005-.021.058-.074.085-.101.08-.079.166-.182.249-.283l.117-.14c.121-.14.175-.25.237-.375l.033-.066a.68.68 0 0 0-.02-.64c-.034-.069-.65-1.555-.715-1.711-.158-.377-.366-.552-.655-.552-.027 0 0 0-.112.005-.137.005-.883.104-1.213.311-.35.22-.94.924-.94 2.16 0 1.112.705 2.162 1.008 2.561l.041.06c1.161 1.695 2.608 2.951 4.074 3.537 1.412.564 2.081.63 2.461.63.16 0 .288-.013.4-.024l.072-.007c.488-.043 1.56-.599 1.804-1.276.192-.534.243-1.117.115-1.329-.088-.144-.239-.216-.43-.308Z"
+        />
+    </svg>
+)
 
 function SkillCard({ title, icon, skills, delay = 0 }: SkillCardProps) {
     return (
@@ -137,6 +191,7 @@ function SkillCard({ title, icon, skills, delay = 0 }: SkillCardProps) {
 export default function Home() {
     // Retrieve data from Inertia props.
     const {
+        hereInformation,
         stats,
         services,
         featuredProjects,
@@ -145,6 +200,7 @@ export default function Home() {
         otherSkills,
         workExperience,
         testimonials,
+
     } = usePage<CustomPageProps>().props;
 
     // Declare state for the active projects tab and filter featured projects.
@@ -187,7 +243,7 @@ export default function Home() {
             <Head title="Home" />
             <div className="max-w-7xl mx-auto  px-4">
                 {/* HERO Section */}
-                <section className="relative py-12 md:py-12 ">
+                <section className="relative py-12 md:py-12">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background -z-10"></div>
                     <div className="absolute inset-0 bg-[url('/placeholder.svg?height=100&width=100')] bg-repeat opacity-5 -z-10"></div>
                     <div className="container px-4 md:px-6">
@@ -199,39 +255,43 @@ export default function Home() {
                                         variant="outline"
                                         className="mb-2 text-sm py-1 px-3 border-primary/30 text-primary"
                                     >
-                                        Full-Stack Developer
+                                        {hereInformation.badge}
                                     </Badge>
                                     <h1 className="text-4xl font-bold tracking-tight sm:text-5xl xl:text-6xl">
-                                        Crafting Smart, Scalable <span className="text-primary">Web and AI Solutions</span>
+                                        {hereInformation.heroTitle}{" "}
+                                        {/* <span className="text-primary">Web and AI Solutions</span> */}
                                     </h1>
                                     <p className="max-w-[600px] text-muted-foreground text-lg md:text-xl leading-relaxed">
-                                        I build innovative web applications and AI-driven solutions that combine elegant design with powerful functionality, showcasing expertise in multiple technologies.
+                                        {hereInformation.heroDescription}
                                     </p>
-
                                 </div>
 
                                 <div
                                     className="flex flex-col sm:flex-row gap-3 animate-on-scroll opacity-0"
                                     style={{ animationDelay: "0.1s" }}
                                 >
-                                    <Link href="/projects">
+                                    <Link href={hereInformation.ctaPrimaryLink!}>
                                         <Button size="lg" className="group w-full sm:w-auto">
-                                            View My Work
+                                            {hereInformation.ctaPrimaryText}
                                             <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                         </Button>
                                     </Link>
-                                    <Link href="/contact">
+                                    <Link href={hereInformation.ctaSecondaryLink!}>
                                         <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                                            Get in Touch
+                                            {hereInformation.ctaSecondaryText}
                                         </Button>
                                     </Link>
                                 </div>
-
                                 <div
                                     className="flex gap-4 pt-4 animate-on-scroll opacity-0"
                                     style={{ animationDelay: "0.3s" }}
                                 >
-                                    <Link href="https://github.com" target="_blank" rel="noopener noreferrer">
+                                    <a
+                                        href={hereInformation.socialLinks?.github!}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="GitHub"
+                                    >
                                         <Button
                                             variant="ghost"
                                             size="icon"
@@ -240,8 +300,13 @@ export default function Home() {
                                             <Github className="h-5 w-5" />
                                             <span className="sr-only">GitHub</span>
                                         </Button>
-                                    </Link>
-                                    <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                                    </a>
+                                    <a
+                                        href={hereInformation.socialLinks?.linkedin!}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="LinkedIn"
+                                    >
                                         <Button
                                             variant="ghost"
                                             size="icon"
@@ -250,8 +315,13 @@ export default function Home() {
                                             <Linkedin className="h-5 w-5" />
                                             <span className="sr-only">LinkedIn</span>
                                         </Button>
-                                    </Link>
-                                    <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+                                    </a>
+                                    <a
+                                        href={hereInformation.socialLinks?.twitter!}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="Twitter"
+                                    >
                                         <Button
                                             variant="ghost"
                                             size="icon"
@@ -260,8 +330,11 @@ export default function Home() {
                                             <Twitter className="h-5 w-5" />
                                             <span className="sr-only">Twitter</span>
                                         </Button>
-                                    </Link>
-                                    <Link href="mailto:hello@example.com">
+                                    </a>
+                                    <a
+                                        href={hereInformation.socialLinks?.email!}
+                                        title="Email"
+                                    >
                                         <Button
                                             variant="ghost"
                                             size="icon"
@@ -270,8 +343,26 @@ export default function Home() {
                                             <Mail className="h-5 w-5" />
                                             <span className="sr-only">Email</span>
                                         </Button>
-                                    </Link>
+                                    </a>
+                                    {hereInformation.socialLinks?.whatsapp && (
+                                        <a
+                                            href={hereInformation.socialLinks.whatsapp}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title="WhatsApp"
+                                        >
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="rounded-full h-10 w-10 bg-background/80 hover:bg-background shadow-sm"
+                                            >
+                                                <WhatsappIcon className="h-5 w-5" />
+                                                <span className="sr-only">WhatsApp</span>
+                                            </Button>
+                                        </a>
+                                    )}
                                 </div>
+
                             </div>
 
                             {/* Hero Image */}
@@ -282,11 +373,11 @@ export default function Home() {
                                 <div className="relative w-full max-w-md aspect-square">
                                     <div className="absolute inset-0 rounded-2xl overflow-hidden border-2 border-primary/10 shadow-2xl bg-gradient-to-br from-background via-background/95 to-background/90">
                                         <Image
-                                            src="/placeholder.svg?height=600&width=600"
+                                            src={hereInformation.heroImageSrc ? `/storage/${hereInformation.heroImageSrc}` : "/placeholder.svg"}
                                             alt="Profile"
                                             width={600}
                                             height={600}
-                                            className="object-cover w-full h-full"
+                                            className="object-contain w-full h-full"
                                         />
                                     </div>
 
@@ -294,13 +385,17 @@ export default function Home() {
                                     <div className="absolute -bottom-6 -right-6 p-4 rounded-xl border border-primary/20 shadow-lg bg-background/80 backdrop-blur-sm">
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                                            <span className="text-sm font-medium">Available for Projects</span>
+                                            <span className="text-sm font-medium">
+                                                {hereInformation.availableForProjectsText}
+                                            </span>
                                         </div>
                                     </div>
                                     <div className="absolute -top-6 -left-6 p-4 rounded-xl border border-primary/20 shadow-lg bg-background/80 backdrop-blur-sm">
                                         <div className="flex items-center gap-2">
                                             <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                                            <span className="text-sm font-medium">3+ Years Experience</span>
+                                            <span className="text-sm font-medium">
+                                                {hereInformation.experienceText}
+                                            </span>
                                         </div>
                                     </div>
                                     {/* Floating Badges */}
@@ -407,12 +502,7 @@ export default function Home() {
                             </Link>
                         </div>
 
-                        {/* Declare activeTab state and compute filteredProjects */}
-
                         <div>
-                            {/* Active tab state */}
-
-                            {/** Add state variables: */}
                             {(() => {
                                 const [activeTab, setActiveTab] = useState("all");
                                 const filteredProjects =
@@ -438,77 +528,74 @@ export default function Home() {
                                         </Tabs>
 
                                         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                                            {filteredProjects.map((project, index) => (
-                                                <Card
-                                                    key={project.id}
-                                                    className="overflow-hidden flex flex-col group animate-on-scroll opacity-0 border border-border/40 bg-background hover:shadow-xl transition-all duration-300 pt-0"
-                                                    style={{ animationDelay: `${0.1 * (index + 1)}s` }}
-                                                >
-                                                    <div className="aspect-video relative overflow-hidden ">
-                                                        <Image
-                                                            src={!project.image || "/placeholder.svg"}
-                                                            alt={project.title}
-                                                            width={600}
-                                                            height={400}
-                                                            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                                                        />
-                                                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                                            <div className="flex gap-3">
-                                                                {project.demoUrl && (
+                                            {filteredProjects.map((project: ProjectType) => {
+                                                const techs = parseField(project.technologies);
+                                                const projectCategories = parseField(project.category);
+                                                const displayedCategories = projectCategories.slice(0, 2);
+                                                const extraCount = projectCategories.length - displayedCategories.length;
+                                                return (
+                                                    <Card key={project.id} className="glass-card overflow-hidden flex flex-col pt-0">
+                                                        <div className="aspect-video relative overflow-hidden">
+                                                            <img
+                                                                src={project.image != null ? `/storage/${project.image}` : "/placeholder.svg"}
+                                                                alt={project.title}
+                                                                width={600}
+                                                                height={400}
+                                                                className="object-cover w-full h-full transition-transform hover:scale-105"
+                                                            />
+                                                        </div>
+                                                        <CardHeader>
+                                                            <div className="flex justify-between items-start">
+                                                                <div>
+                                                                    <CardTitle>{project.title}</CardTitle>
+                                                                    <CardDescription>{project.date}</CardDescription>
+                                                                </div>
+                                                                <div className="flex gap-1">
+                                                                    {displayedCategories.map((cat, index) => (
+                                                                        <Badge key={index} className="capitalize">
+                                                                            {cat}
+                                                                        </Badge>
+                                                                    ))}
+                                                                    {extraCount > 0 && (
+                                                                        <Badge className="capitalize">+{extraCount}</Badge>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </CardHeader>
+                                                        <CardContent className="flex-1">
+                                                            <p className="mb-4">{project.description}</p>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {techs.map((tech: string, index: number) => (
+                                                                    <Badge key={index} variant="secondary">
+                                                                        {tech}
+                                                                    </Badge>
+                                                                ))}
+                                                            </div>
+                                                        </CardContent>
+                                                        <CardFooter>
+                                                            <div className="flex gap-2 w-full">
+                                                                <Link href={`/projects/${project.id}`} className="flex-1">
+                                                                    <Button variant="default" className="w-full">
+                                                                        View Details
+                                                                    </Button>
+                                                                </Link>
+                                                                {project.demo_url && (
                                                                     <Link
-                                                                        href={project.demoUrl}
+                                                                        href={project.demo_url}
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
+                                                                        className="flex-1"
                                                                     >
-                                                                        <Button size="sm" variant="secondary" className="rounded-full">
-                                                                            <ExternalLink className="h-4 w-4 mr-2" />
-                                                                            Demo
-                                                                        </Button>
-                                                                    </Link>
-                                                                )}
-                                                                {project.githubUrl && (
-                                                                    <Link
-                                                                        href={project.githubUrl}
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                    >
-                                                                        <Button size="sm" variant="secondary" className="rounded-full">
-                                                                            <Github className="h-4 w-4 mr-2" />
-                                                                            Code
+                                                                        <Button variant="outline" className="w-full">
+                                                                            Live Demo
                                                                         </Button>
                                                                     </Link>
                                                                 )}
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <CardHeader>
-                                                        <div className="flex justify-between items-start">
-                                                            <CardTitle>{project.title}</CardTitle>
-                                                            <Badge variant="outline" className="capitalize">
-                                                                {project.type}
-                                                            </Badge>
-                                                        </div>
-                                                        <CardDescription>{project.description}</CardDescription>
-                                                    </CardHeader>
-                                                    <CardContent className="flex-1">
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {project.technologies.map((tech) => (
-                                                                <Badge key={tech} variant="secondary" className="bg-secondary/50">
-                                                                    {tech}
-                                                                </Badge>
-                                                            ))}
-                                                        </div>
-                                                    </CardContent>
-                                                    <CardFooter>
-                                                        <Link href={`/projects/${project.id}`} className="w-full">
-                                                            <Button variant="default" className="w-full group">
-                                                                View Details
-                                                                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                                            </Button>
-                                                        </Link>
-                                                    </CardFooter>
-                                                </Card>
-                                            ))}
+                                                        </CardFooter>
+                                                    </Card>
+                                                );
+                                            })}
                                         </div>
                                     </>
                                 );
@@ -580,7 +667,6 @@ export default function Home() {
                             {/* Timeline line */}
                             <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-border transform -translate-x-1/2"></div>
                             {workExperience.map((job, index) => {
-                                // Determine if the job should appear on the left or right on larger screens.
                                 const isLeft = index % 2 === 0;
                                 return (
                                     <div
@@ -592,7 +678,7 @@ export default function Home() {
                                         style={{ animationDelay: `${0.2 * index}s` }}
                                     >
                                         {/* Timeline dot */}
-                                        <div className={`absolute hidden sm:block ${!isLeft?" -left-0 ":" -right-0  "} top-0 w-5 h-5 rounded-full bg-primary transform ${isLeft?" translate-x-1/4 ":" -translate-x-1/1  "}  -translate-y-1/2`}></div>
+                                        <div className={`absolute hidden sm:block ${!isLeft ? " -left-0 " : " -right-0  "} top-0 w-5 h-5 rounded-full bg-primary transform ${isLeft ? " translate-x-1/4 " : " -translate-x-1/1  "}  -translate-y-1/2`}></div>
                                         <div className={`absolute  sm:hidden block left-0 top-0 w-5 h-5 rounded-full bg-primary transform -translate-x-1/2 -translate-y-1/2`}></div>
                                         <Card className="border border-border/40 bg-background hover:shadow-lg transition-all duration-300">
                                             <CardHeader>
@@ -694,27 +780,7 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* Theme Showcase */}
-                <section className="py-16 md:py-24">
-                    <div className="container px-4 md:px-6">
-                        <div className="text-center mb-12 animate-on-scroll opacity-0">
-                            <Badge variant="outline" className="mb-2">
-                                Customization
-                            </Badge>
-                            <h2 className="section-heading">Choose Your Theme</h2>
-                            <p className="text-muted-foreground max-w-2xl mx-auto">
-                                Click the theme toggle in the header to select from 6 different color themes and switch between light and dark mode
-                            </p>
-                        </div>
-                        <div
-                            className="max-w-3xl mx-auto animate-on-scroll opacity-0"
-                            style={{ animationDelay: "0.1s" }}
-                        >
-                            {/* Uncomment and update the component if needed */}
-                            {/* <ColorThemeShowcase /> */}
-                        </div>
-                    </div>
-                </section>
+
 
                 {/* Call to Action */}
                 <section className="py-16 md:py-24 bg-muted/20">

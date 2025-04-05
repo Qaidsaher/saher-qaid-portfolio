@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Website;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -41,15 +42,24 @@ class HandleInertiaRequests extends Middleware
 
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
+            'name'  => config('app.name'),
+            'quote' => [
+                'message' => trim($message),
+                'author'  => trim($author)
+            ],
             'auth' => [
                 'user' => $request->user(),
+            ],
+            'website'=> Website::first(),
+            // إضافة بيانات flash من الجلسة
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error'   => $request->session()->get('error'),
             ],
             'ziggy' => fn (): array => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
-            ]
+            ],
         ];
     }
 }

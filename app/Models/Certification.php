@@ -14,8 +14,6 @@ class Certification extends Model
         'issuer',
         'date',
         'url',
-
-
     ];
 
 }

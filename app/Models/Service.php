@@ -10,11 +10,20 @@ class Service extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'title',
-        'description',
+        'short_description',
+        'detailed_description',
+        'additional_info',
         'icon',
-        'link',
+        'features',
+        'technologies',
+        'gallery',
     ];
 
+    // Automatically cast JSON fields to arrays
+    protected $casts = [
+        'features' => 'array',
+        'technologies' => 'array',
+        'gallery' => 'array',
+    ];
 }

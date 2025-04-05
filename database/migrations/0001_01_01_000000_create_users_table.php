@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 return new class extends Migration
 {
@@ -21,20 +23,20 @@ return new class extends Migration
             $table->text('about')->nullable();
             $table->text('bio')->nullable();
             $table->string('phone_number')->nullable();
-            // JSON columns for links and education data
-            $table->json('links')->nullable();       // e.g., social accounts, GitHub, LinkedIn
-            $table->string('availability')->nullable(); // e.g., "Available for freelance projects"
+            // JSON column for links
+            $table->json('links')->nullable();
+            $table->string('availability')->nullable();
 
             // New extra fields
             $table->string('whatsapp_number')->nullable();
-            // job_meta will hold job name, achievements, and any meta keys as JSON
             $table->json('job_meta')->nullable();
-            // awards as JSON (an array of award details) and a numeric count
             $table->integer('awards_count')->nullable();
-            // Theme preferences for UI and SEO keywords as JSON
             $table->string('theme')->nullable();
             $table->string('theme_mode')->nullable();
             $table->json('seo_keywords')->nullable();
+
+            // NEW: Role column added and set default value to "user"
+            $table->string('role')->default('user');
 
             $table->rememberToken();
             $table->timestamps();
@@ -54,6 +56,17 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        // Insert a default admin user
+        DB::table('users')->insert([
+            'name' => 'saher qaid',
+            'email' => 'saherqaid2020@gmail.com',
+            'password' => Hash::make('admin.saherqaid2020'), // Replace 'secret' with a secure default.
+            'role' => 'admin',
+            'phone_number' => '+967712238264',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**
@@ -61,8 +74,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };
