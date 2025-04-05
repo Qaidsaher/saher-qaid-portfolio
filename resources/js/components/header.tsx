@@ -7,13 +7,13 @@ import { Menu, X } from "lucide-react";
 import AppearanceToggleDropdown from "./appearance-dropdown";
 import { type SharedData } from '@/types';
 const navItems = [
-    { name: "Home", href: "/" },
-    { name: "Projects", href: "/projects" },
-    { name: "Articles", href: "/articles" },
-    { name: "Skills", href: "/skills" },
-    { name: "Experience", href: "/experiences" },
-    { name: "Services", href: "/services" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: route('home') },
+    { name: "Projects", href: route('projects') },
+    { name: "Articles", href: route('articles') },
+    { name: "Skills", href: route('skills') },
+    { name: "Experience", href: route('experiences') },
+    { name: "Services", href: route('services') },
+    { name: "Contact", href: route('contact') },
 ];
 
 export default function Header() {

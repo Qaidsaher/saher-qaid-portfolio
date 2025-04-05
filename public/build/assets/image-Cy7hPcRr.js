@@ -1,0 +1,1 @@
+import{j as n}from"./app-DYPug_a-.js";const u=({src:t,alt:a,width:s,height:o,className:e="",style:m,...r})=>{const x={width:s?`${s}px`:"auto",height:o?`${o}px`:"auto",...m};return n.jsx("img",{src:t,alt:a,width:s,height:o,style:x,className:`rounded-lg ${e}`,...r})};export{u as I};
