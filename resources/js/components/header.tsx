@@ -8,11 +8,11 @@ import AppearanceToggleDropdown from "./appearance-dropdown";
 import { type SharedData } from '@/types';
 const navItems = [
     { name: "Home", href: route('home') },
-    { name: "Projects", href: route('projects') },
-    { name: "Articles", href: route('articles') },
-    { name: "Skills", href: route('skills') },
-    { name: "Experience", href: route('experiences') },
-    { name: "Services", href: route('services') },
+    { name: "Projects", href: route('projects.index') },
+    { name: "Articles", href: route('articles.index') },
+    { name: "Skills", href: route('skills.index') },
+    { name: "Experience", href: route('experiences.index') },
+    { name: "Services", href: route('services.index') },
     { name: "Contact", href: route('contact') },
 ];
 
