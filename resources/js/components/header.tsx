@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 import AppearanceToggleDropdown from "./appearance-dropdown";
 import { type SharedData } from '@/types';
 const navItems = [
-    { name: "Home", href: route('home') },
+    { name: "Home", href: '/' },
     { name: "Projects", href: route('projects.index') },
     { name: "Articles", href: route('articles.index') },
     { name: "Skills", href: route('skills.index') },

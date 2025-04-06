@@ -128,7 +128,7 @@ Route::get('/', function () {
         'testimonials'     => Testimonial::get()->take(3),
 
     ]);
-})->name('home');
+});
 
 
 Route::get('/contact', function () {
