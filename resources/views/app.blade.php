@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="google-site-verification" content="9BnvjmjfGwMIEULxXeJcpGS6lzwraqtjLVeU7Dl2XFw" />
     <!-- SEO Meta Tags -->
     <meta name="description" content="Saher Qaid - Full-stack & AI Developer. Explore my portfolio, innovative projects, and experience in Laravel, Flutter, and AI.">
     <meta name="keywords" content="Saher Qaid, Full-Stack Developer, AI Developer, Laravel, Flutter, Web Development, Mobile Apps, Machine Learning, Software Engineer, Portfolio">
