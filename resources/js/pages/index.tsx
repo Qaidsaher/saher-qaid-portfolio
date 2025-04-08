@@ -1,4 +1,4 @@
-  
+
 
 import { useEffect, useRef, useState } from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
@@ -240,7 +240,12 @@ export default function Home() {
     };
     return (
         <UserLayout>
-            <Head title="Home" />
+            <Head>
+                <title >Saher Qaid | ساهر الهمداني - Full-Stack Developer & AI Innovator</title>
+                <meta name="description" content="Saher Qaid | ساهر الهمداني - Full-stack & AI Developer. Explore innovative projects and experience in Laravel, React, TypeScript, and more." />
+                <meta name="keywords" content="Saher Qaid, ساهر الهمداني, ساهر محمد, Full-Stack Developer, AI Developer, Laravel, React, TypeScript, Flutter, Web Development, Mobile Apps, Machine Learning, Software Engineer, Portfolio" />
+                <meta name="author" content="Saher Mohammed Abdo Qaid / ساهر الهمداني" />
+            </Head>
             <div className="max-w-7xl mx-auto  px-4">
                 {/* HERO Section */}
                 <section className="relative py-12 md:py-12">
