@@ -38,6 +38,8 @@ import {
 import AppLayout from "@/layouts/app-layout";
 import UserLayout from "@/layouts/user-layout";
 import Image from "@/components/image";
+import CallToActionSection from "@/components/sections/CallToActionSection";
+import ProjectCard from "@/components/shared/project-card";
 
 // ---------------------
 // Extend with Inertia props interface.
@@ -241,9 +243,8 @@ export default function Home() {
     return (
         <UserLayout>
             <Head title="Saher Qaid | ساهر الهمداني - Full-Stack Developer & AI Innovator">
-
                 <meta head-key="description" name="description" content="Saher Qaid | ساهر الهمداني - Full-stack & AI Developer. Explore innovative projects and experience in Laravel, React, TypeScript, and more." />
-                <meta  head-key="keywords"  name="keywords" content="Saher Qaid, ساهر الهمداني, ساهر محمد, Full-Stack Developer, AI Developer, Laravel, React, TypeScript, Flutter, Web Development, Mobile Apps, Machine Learning, Software Engineer, Portfolio" />
+                <meta head-key="keywords" name="keywords" content="Saher Qaid, ساهر الهمداني, ساهر محمد, Full-Stack Developer, AI Developer, Laravel, React, TypeScript, Flutter, Web Development, Mobile Apps, Machine Learning, Software Engineer, Portfolio" />
             </Head>
             <div className="max-w-7xl mx-auto  px-4">
                 {/* HERO Section */}
@@ -533,73 +534,12 @@ export default function Home() {
 
                                         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                                             {filteredProjects.map((project: ProjectType) => {
-                                                const techs = parseField(project.technologies);
-                                                const projectCategories = parseField(project.category);
-                                                const displayedCategories = projectCategories.slice(0, 2);
-                                                const extraCount = projectCategories.length - displayedCategories.length;
+
                                                 return (
-                                                    <Card key={project.id} className="glass-card overflow-hidden flex flex-col pt-0">
-                                                        <div className="aspect-video relative overflow-hidden">
-                                                            <img
-                                                                src={project.image != null ? `/storage/${project.image}` : "/placeholder.svg"}
-                                                                alt={project.title}
-                                                                width={600}
-                                                                height={400}
-                                                                className="object-cover w-full h-full transition-transform hover:scale-105"
-                                                            />
-                                                        </div>
-                                                        <CardHeader>
-                                                            <div className="flex justify-between items-start">
-                                                                <div>
-                                                                    <CardTitle>{project.title}</CardTitle>
-                                                                    <CardDescription>{project.date}</CardDescription>
-                                                                </div>
-                                                                <div className="flex gap-1">
-                                                                    {displayedCategories.map((cat, index) => (
-                                                                        <Badge key={index} className="capitalize">
-                                                                            {cat}
-                                                                        </Badge>
-                                                                    ))}
-                                                                    {extraCount > 0 && (
-                                                                        <Badge className="capitalize">+{extraCount}</Badge>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </CardHeader>
-                                                        <CardContent className="flex-1">
-                                                            <p className="mb-4">{project.description}</p>
-                                                            <div className="flex flex-wrap gap-2">
-                                                                {techs.map((tech: string, index: number) => (
-                                                                    <Badge key={index} variant="secondary">
-                                                                        {tech}
-                                                                    </Badge>
-                                                                ))}
-                                                            </div>
-                                                        </CardContent>
-                                                        <CardFooter>
-                                                            <div className="flex gap-2 w-full">
-                                                                <Link href={`/projects/${project.id}`} className="flex-1">
-                                                                    <Button variant="default" className="w-full">
-                                                                        View Details
-                                                                    </Button>
-                                                                </Link>
-                                                                {project.demo_url && (
-                                                                    <Link
-                                                                        href={project.demo_url}
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                        className="flex-1"
-                                                                    >
-                                                                        <Button variant="outline" className="w-full">
-                                                                            Live Demo
-                                                                        </Button>
-                                                                    </Link>
-                                                                )}
-                                                            </div>
-                                                        </CardFooter>
-                                                    </Card>
+                                                    <ProjectCard key={project.id} project={project} />
                                                 );
                                             })}
+
                                         </div>
                                     </>
                                 );
@@ -783,43 +723,10 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
-
-
-
-                {/* Call to Action */}
-                <section className="py-16 md:py-24 bg-muted/20">
-                    <div className="container px-4 md:px-6">
-                        <div className="rounded-2xl p-8 md:p-12 max-w-4xl mx-auto text-center animate-on-scroll opacity-0 border border-primary/20 bg-background shadow-lg">
-                            <Badge variant="outline" className="mb-4">
-                                Available for Hire
-                            </Badge>
-                            <h2 className="text-3xl font-bold tracking-tight md:text-4xl mb-4">
-                                Let's Work Together
-                            </h2>
-                            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-                                I'm currently available for freelance work and open to new opportunities.
-                                If you have a project that needs my expertise, let's discuss how I can help.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Link href="/contact">
-                                    <Button size="lg" className="group">
-                                        Get in Touch
-                                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                    </Button>
-                                </Link>
-                                <Link href="/projects">
-                                    <Button variant="outline" size="lg">
-                                        View My Work
-                                    </Button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <CallToActionSection />
             </div>
 
         </UserLayout>
     );
 }
 
-// export default Home;
