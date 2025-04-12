@@ -34,52 +34,52 @@ const mainNavItems: NavItem[] = [
   },
   {
     title: 'Website',
-    href: route('admin.website'),
+    href: route('admin.website.index'),
     icon: Globe,
   },
   {
     title: 'Projects',
-    href: route('admin.projects'),
+    href: route('admin.projects.index'),
     icon: Folder,
   },
   {
     title: 'Experiences',
-    href: route('admin.experiences'),
+    href: route('admin.experiences.index'),
     icon: Briefcase,
   },
   {
     title: 'Skills',
-    href: route('admin.skills'),
+    href: route('admin.skills.index'),
     icon: Code,
   },
   {
     title: 'Services',
-    href: route('admin.services'),
+    href: route('admin.services.index'),
     icon: LayoutGrid,
   },
   {
     title: 'Awards',
-    href: route('admin.awards'),
+    href: route('admin.awards.index'),
     icon: Medal,
   },
   {
     title: 'Certificates',
-    href: route('admin.certifications'),
+    href: route('admin.certifications.index'),
     icon: Award,
   },
   {
     title: 'Educations',
-    href: route('admin.educations'),
+    href: route('admin.educations.index'),
     icon: BookOpen,
   },
   {
     title: 'Articles',
-    href: route('admin.articles'),
+    href: route('admin.articles.index'),
     icon: FileText,
   },
   {
     title: 'Testimonials',
-    href: route('admin.testimonials'),
+    href: route('admin.testimonials.index'),
     icon: Users,
   },
 ];

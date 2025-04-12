@@ -66,7 +66,7 @@ export default function Header() {
                 </nav>
 
                 <div className="flex md:hidden items-center space-x-2">
-                    <ThemeToggle />
+                <AppearanceToggleDropdown />
                     <Button
                         variant="ghost"
                         size="icon"

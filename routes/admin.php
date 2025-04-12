@@ -40,7 +40,7 @@ Route::middleware(['auth','admin'])
         // Route::delete('services/{service}', [ServicesController::class, 'destroy']);
 
         // Testimonials Routes
-        Route::get('testimonials', [TestimonialsController::class, 'index']);
+        Route::get('testimonials', [TestimonialsController::class, 'index'])->name('testimonials.index');
         Route::post('testimonials', [TestimonialsController::class, 'store']);
         Route::patch('testimonials/{testimonial}', [TestimonialsController::class, 'update']);
         Route::delete('testimonials/{testimonial}', [TestimonialsController::class, 'destroy']);
