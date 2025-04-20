@@ -1,4 +1,4 @@
- 
+
 import React, { FormEventHandler } from "react";
 import { Head, useForm, usePage } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
@@ -52,9 +52,9 @@ export default function EditArticle() {
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Articles", href: "/admin/articles" },
-    { title: "Edit Article", href: `/admin/articles/${article.id}/edit` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Articles", href: route("admin.articles.index") },
+    { title: "Edit Article", href: route("admin.articles.edit", article.id) },
   ];
 
   return (

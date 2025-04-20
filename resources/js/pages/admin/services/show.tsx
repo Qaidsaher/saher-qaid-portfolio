@@ -1,4 +1,4 @@
- 
+
 import React from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -21,9 +21,9 @@ export default function ServiceShow() {
   const { service } = (usePage().props as unknown) as { service: Service };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Services", href: "/admin/services" },
-    { title: service.title, href: `/admin/services/${service.id}` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Services", href: route("admin.services.index") },
+    { title: service.title, href: route("admin.services.show", service.id) },
   ];
 
   return (

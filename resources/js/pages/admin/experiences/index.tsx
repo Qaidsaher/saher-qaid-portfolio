@@ -1,4 +1,4 @@
- 
+
 import React, { useState } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -48,8 +48,8 @@ export default function ExperienceIndex({ experiences }: Props) {
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Experiences", href: "/admin/experiences" },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Experiences", href: route("admin.experiences.index") },
   ];
 
   return (

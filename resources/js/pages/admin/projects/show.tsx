@@ -1,4 +1,4 @@
-"use client";
+
 import React from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -82,9 +82,9 @@ export default function ShowProject() {
   const nextProject = currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null;
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Projects", href: "/admin/projects" },
-    { title: project.title, href: `/admin/projects/${project.id}` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Projects", href: route("admin.projects.index") },
+    { title: project.title, href: route("admin.projects.show", project.id) },
   ];
 
   return (

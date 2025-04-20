@@ -1,4 +1,4 @@
- 
+
 import React, { useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -39,8 +39,8 @@ export default function CertificationIndex({ certifications }: Props) {
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Certifications", href: "/admin/certifications" },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Certifications", href: route("admin.certifications.index") },
   ];
 
   return (

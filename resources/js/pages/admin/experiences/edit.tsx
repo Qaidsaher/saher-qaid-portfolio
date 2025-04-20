@@ -1,4 +1,4 @@
- 
+
 import React, { FormEvent } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
@@ -55,9 +55,9 @@ export default function ExperienceEdit({ experience }: Props) {
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Experiences", href: "/admin/experiences" },
-    { title: "Edit Experience", href: `/admin/experiences/${experience.id}/edit` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Experiences", href: route("admin.experiences.index") },
+    { title: "Edit Experience", href: route("admin.experiences.edit", experience.id) },
   ];
 
   return (

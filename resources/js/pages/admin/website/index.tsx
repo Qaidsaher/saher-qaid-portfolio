@@ -1,4 +1,4 @@
- 
+
 import React from "react";
 import { Head, usePage, Link } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -67,8 +67,8 @@ const SocialLinkIcon = ({ name }: { name: string }) => {
 export default function WebsiteIndex() {
   const { website } = usePage<WebsiteIndexProps>().props;
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Website", href: "/admin/website" },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Website", href: route("admin.website.index") },
   ];
 
   return (

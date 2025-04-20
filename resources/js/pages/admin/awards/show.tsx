@@ -1,4 +1,4 @@
- 
+
 import React from "react";
 import { Head } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -17,9 +17,9 @@ interface Props {
 
 export default function AwardShow({ award }: Props) {
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Awards", href: "/admin/awards" },
-    { title: "Award Details", href: `/admin/awards/${award.id}` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Awards", href: route("admin.awards.index") },
+    { title: "Award Details", href: route("admin.awards.show", award.id) },
   ];
 
   return (

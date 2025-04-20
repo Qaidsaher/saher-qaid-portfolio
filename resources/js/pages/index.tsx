@@ -40,6 +40,7 @@ import UserLayout from "@/layouts/user-layout";
 import Image from "@/components/image";
 import CallToActionSection from "@/components/sections/CallToActionSection";
 import ProjectCard from "@/components/shared/project-card";
+import ServicesSection from "@/components/sections/ServicesSection";
 
 // ---------------------
 // Extend with Inertia props interface.
@@ -446,7 +447,7 @@ export default function Home() {
                 </section>
 
                 {/* Services Section */}
-                <section className="py-10 md:py-20">
+                {/* <section className="py-10 md:py-20">
                     <div className="container px-4 md:px-6">
                         <div className="text-center mb-12 animate-on-scroll opacity-0">
                             <Badge variant="outline" className="mb-2">
@@ -486,7 +487,8 @@ export default function Home() {
                             ))}
                         </div>
                     </div>
-                </section>
+                </section> */}
+                <ServicesSection/>
 
                 {/* Featured Projects Section */}
                 <section className="py-16 md:py-20 bg-muted/20">

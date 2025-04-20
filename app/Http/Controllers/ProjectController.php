@@ -35,6 +35,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         // Validate the incoming data.
+        return response()->json($request->all(), 200);
         $validated = $request->validate([
             'title'             => 'required|string|max:255',
             'short_description' => 'required|string|max:255',

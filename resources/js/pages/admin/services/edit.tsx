@@ -1,4 +1,4 @@
- 
+
 import React, { FormEventHandler } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -46,9 +46,9 @@ export default function ServiceEdit({ service }: ServiceEditProps) {
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Services", href: "/admin/services" },
-    { title: "Edit Service", href: `/admin/services/${service.id}/edit` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Services", href: route("admin.services.index") },
+    { title: "Edit Service", href: route("admin.services.edit", service.id) },
   ];
 
   return (

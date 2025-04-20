@@ -1,4 +1,4 @@
- 
+
 import React, { FormEventHandler } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
@@ -20,15 +20,15 @@ type ArticleForm = {
 };
 
 const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-  {
-    title: "Articles",
-    href: "/admin/articles",
-  },
-  {
-    title: "Create Article",
-    href: "/admin/articles/create",
-  },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    {
+        title: "Articles",
+        href: route("admin.articles.index"),
+    },
+    {
+        title: "Create Article",
+        href: route("admin.articles.create"),
+    },
 ];
 
 export default function CreateArticle() {

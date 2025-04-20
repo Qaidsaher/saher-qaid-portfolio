@@ -1,4 +1,4 @@
- 
+
 import React, { FormEventHandler, useEffect, useRef, useState } from "react";
 import { Head, useForm, usePage } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -165,9 +165,9 @@ export default function WebsiteEdit() {
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Website", href: "/admin/website" },
-    { title: "Edit Website", href: "/admin/website/edit" },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Website", href: route("admin.website.index") },
+    { title: "Edit Website", href: route("admin.website.edit") },
   ];
 
   return (

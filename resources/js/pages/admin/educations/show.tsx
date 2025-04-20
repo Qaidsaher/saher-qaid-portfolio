@@ -1,4 +1,4 @@
- 
+
 import React from "react";
 import { Head, usePage, Link } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -23,9 +23,9 @@ interface EducationShowProps {
 export default function EducationShow() {
   const { education } = usePage<EducationShowProps>().props;
   const breadcrumbs = [
-    { title: "Dashboard", href: "/dashboard" },
-    { title: "Educations", href: "/educations" },
-    { title: education.degree, href: `/educations/${education.id}` },
+    { title: "Dashboard", href: route("dashboard") },
+    { title: "Educations", href: route("educations.index") },
+    { title: education.degree, href: route("educations.show", education.id) },
   ];
 
   return (

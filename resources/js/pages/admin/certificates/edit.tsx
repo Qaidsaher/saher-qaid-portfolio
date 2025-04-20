@@ -1,4 +1,4 @@
- 
+
 import React, { FormEvent } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -34,9 +34,9 @@ export default function CertificationEdit({ certification }: Props) {
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Certifications", href: "/admin/certifications" },
-    { title: "Edit Certification", href: `/admin/certifications/${certification.id}/edit` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Certifications", href: route("admin.certifications.index") },
+    { title: "Edit Certification", href: route("admin.certifications.edit", certification.id) },
   ];
 
   return (

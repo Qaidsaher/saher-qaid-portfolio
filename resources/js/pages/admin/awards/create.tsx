@@ -1,4 +1,4 @@
- 
+
 import React, { FormEventHandler } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -26,9 +26,9 @@ export default function AwardCreate() {
     };
 
     const breadcrumbs = [
-        { title: "Dashboard", href: "/admin/dashboard" },
-        { title: "Awards", href: "/admin/awards" },
-        { title: "Create Award", href: "/admin/awards/create" },
+        { title: "Dashboard", href: route("admin.dashboard") },
+        { title: "Awards", href: route("admin.awards.index") },
+        { title: "Create Award", href: route("admin.awards.create") },
     ];
 
     return (

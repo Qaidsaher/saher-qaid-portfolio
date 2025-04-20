@@ -42,8 +42,8 @@ export default function ServiceIndex() {
     };
 
     const breadcrumbs = [
-        { title: "Dashboard", href: "/admin/dashboard" },
-        { title: "Services", href: "/admin/services" },
+        { title: "Dashboard", href: route("admin.dashboard") },
+        { title: "Services", href: route("admin.services.index") },
     ];
 
     return (

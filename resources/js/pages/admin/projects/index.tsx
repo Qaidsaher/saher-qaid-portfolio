@@ -1,4 +1,4 @@
-"use client";
+
 import React, { useEffect, useState } from "react";
 import { Head, Link, usePage, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -61,8 +61,8 @@ export default function IndexProjects() {
   ];
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Projects", href: "/admin/projects" },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Projects", href: route("admin.projects.index") },
   ];
 
   const handleDelete = (projectId: number) => {

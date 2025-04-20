@@ -1,4 +1,4 @@
- 
+
 import React, { FormEventHandler, useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -58,9 +58,9 @@ export default function EducationCreate() {
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Educations", href: "/admin/educations" },
-    { title: "Create Education", href: "/admin/educations/create" },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Educations", href: route("admin.educations.index") },
+    { title: "Create Education", href: route("admin.educations.create") },
   ];
 
   return (

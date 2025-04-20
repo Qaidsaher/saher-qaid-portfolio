@@ -1,4 +1,4 @@
- 
+
 
 import React from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
@@ -21,16 +21,16 @@ interface CustomPageProps extends Record<string, any> {
 export default function ShowArticle() {
   const { article } = usePage<CustomPageProps>().props;
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-  {
-    title: "Articles",
-    href: "/admin/articles",
-  },
-  {
-    title: "Create Article",
-   href: `/admin/articles/${article.id}` ,
-  },
-];
+    { title: "Dashboard", href: route("admin.dashboard") },
+    {
+      title: "Articles",
+      href: route("admin.articles.index"),
+    },
+    {
+      title: "Create Article",
+      href: route("admin.articles.edit", article.id),
+    },
+  ];
   return (
     <UserLayout>
       <Head title={article.title} />

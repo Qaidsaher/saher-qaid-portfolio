@@ -1,4 +1,4 @@
- 
+
 import React, { FormEventHandler } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -43,9 +43,9 @@ export default function ServiceCreate() {
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Services", href: "/admin/services" },
-    { title: "Create Service", href: "/admin/services/create" },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Services", href: route("admin.services.index") },
+    { title: "Create Service", href: route("admin.services.create") },
   ];
 
   return (

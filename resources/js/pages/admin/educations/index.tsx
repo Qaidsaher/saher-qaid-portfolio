@@ -1,4 +1,4 @@
- 
+
 import React from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -21,8 +21,8 @@ interface EducationIndexProps {
 export default function EducationIndex() {
   const { educations } = usePage<EducationIndexProps>().props;
   const breadcrumbs = [
-    { title: "Dashboard", href: "/dashboard" },
-    { title: "Educations", href: "/educations" },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Educations", href: route("admin.educations.index") },
   ];
 
   return (

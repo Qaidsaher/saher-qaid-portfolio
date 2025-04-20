@@ -1,4 +1,4 @@
- 
+
 import React, { FormEventHandler } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -25,9 +25,9 @@ export default function CertificationCreate() {
     };
 
     const breadcrumbs = [
-        { title: "Dashboard", href: "/admin/dashboard" },
-        { title: "Certifications", href: "/admin/certifications" },
-        { title: "Create Certification", href: "/admin/certifications/create" },
+        { title: "Dashboard", href: route("admin.dashboard") },
+        { title: "Certifications", href: route("admin.certifications.index") },
+        { title: "Create Certification", href: route("admin.certifications.create") },
     ];
 
     return (

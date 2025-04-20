@@ -1,4 +1,4 @@
- 
+
 import React, { useState } from "react";
 import { Head, Link, usePage, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -18,8 +18,8 @@ interface CustomPageProps extends Record<string, any> {
 }
 
 const breadcrumbs = [
-  { title: "Dashboard", href: "/admin/dashboard" },
-  { title: "Articles", href: "/admin/articles" },
+  { title: "Dashboard", href: route("admin.dashboard") },
+  { title: "Articles", href: route("admin.articles.index") },
 ];
 
 export default function IndexArticle() {

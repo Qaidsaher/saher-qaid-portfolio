@@ -1,4 +1,4 @@
- 
+
 import React from "react";
 import { Head } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -17,9 +17,9 @@ interface Props {
 
 export default function CertificationShow({ certification }: Props) {
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Certifications", href: "/admin/certifications" },
-    { title: "Certification Details", href: `/admin/certifications/${certification.id}` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Certifications", href: route("admin.certifications.index") },
+    { title: "Certification Details", href: route("admin.certifications.show", certification.id) },
   ];
 
   return (

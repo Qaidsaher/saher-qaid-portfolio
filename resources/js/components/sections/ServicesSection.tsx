@@ -1,9 +1,9 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Link } from "@inertiajs/react";
+import { ChevronRight, Smartphone, Code, Palette } from "lucide-react";
+import { Link, usePage } from "@inertiajs/react";
+import type { SharedData } from "@/types";
 
 interface Service {
   title: string;
@@ -12,12 +12,18 @@ interface Service {
   link: string;
 }
 
-interface ServicesSectionProps {
-  services: Service[];
-  iconMap: { [key: string]: React.ReactNode };
-}
+export default function ServicesSection() {
+  // Retrieve shared services data using Inertia's usePage hook.
+  const { services } = usePage<SharedData>().props;
 
-export default function ServicesSection({ services, iconMap }: ServicesSectionProps) {
+  // Hardcoded iconMap; do not accept any props.
+  const iconMap: { [key: string]: React.ReactNode } = {
+    smartphone: <Smartphone className="h-6 w-6 text-primary" />,
+    code: <Code className="h-6 w-6 text-primary" />,
+    palette: <Palette className="h-6 w-6 text-primary" />,
+    // Add other icon mappings as needed
+  };
+
   return (
     <section className="py-10 md:py-20">
       <div className="container px-4 md:px-6">
@@ -31,7 +37,7 @@ export default function ServicesSection({ services, iconMap }: ServicesSectionPr
           </p>
         </div>
         <div className="grid gap-8 md:grid-cols-3">
-          {services.map((service, index) => (
+          {services.map((service: Service, index: number) => (
             <Card
               key={index}
               className="border border-border/40 bg-background hover:shadow-lg transition-all duration-300 animate-on-scroll opacity-0"

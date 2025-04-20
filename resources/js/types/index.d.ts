@@ -66,3 +66,9 @@ export interface Website {
     updated_at: string;
   }
 
+  export interface Service {
+    title: string;
+    description: string;
+    icon: string;
+    link: string;
+}

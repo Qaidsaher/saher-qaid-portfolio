@@ -1,4 +1,4 @@
- 
+
 import React from "react";
 import { Head } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -21,9 +21,9 @@ interface Props {
 
 export default function ExperienceShow({ experience }: Props) {
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Experiences", href: "/admin/experiences" },
-    { title: "Experience Details", href: `/admin/experiences/${experience.id}` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Experiences", href: route("admin.experiences.index") },
+    { title: "Experience Details", href: route("admin.experiences.show", experience.id) },
   ];
 
   return (

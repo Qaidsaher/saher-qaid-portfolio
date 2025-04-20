@@ -100,16 +100,16 @@ export default function EditProject() {
       period: formattedPeriod,
     });
 
-    patch(route("projects.update", project.id), {
+    patch(route("admin.projects.update", project.id), {
       preserveState: true,
       onSuccess: () => reset(),
     });
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: "/admin/dashboard" },
-    { title: "Projects", href: "/admin/projects" },
-    { title: "Edit Project", href: `/admin/projects/${project.id}/edit` },
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Projects", href: route("admin.projects.index") },
+    { title: "Edit Project", href: route("admin.projects.edit", project.id) },
   ];
 
   return (
