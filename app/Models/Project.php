@@ -20,9 +20,6 @@ class Project extends Model
         'technologies',
         'category',
         'image',
-        'features',
-        'process',
-        'gallery',
         'role',
         'challenge',
         'solution',
@@ -35,11 +32,25 @@ class Project extends Model
     protected $casts = [
         'technologies' => 'array',
         'category'     => 'array',   // Change to 'string' if you want a single value
-        'features'     => 'array',
-        'process'      => 'array',
-        'gallery'      => 'array',
+
     ];
 
+
+    public function features()
+    {
+        return $this->hasMany(Feature::class);
+    }
+
+    public function galleries()
+    {
+        return $this->hasMany(Gallery::class);
+    }
+
+    public function processes()
+    {
+        return $this->hasMany(Process::class);
+    }
+
     // Optional relationship if a project belongs to a user
-  
+
 }

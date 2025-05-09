@@ -1,4 +1,4 @@
-  
+
 
 import React, { useEffect, useRef, useState } from "react";
 import { Head, usePage } from "@inertiajs/react";

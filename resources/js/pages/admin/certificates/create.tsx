@@ -1,4 +1,3 @@
-
 import React, { FormEventHandler } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
@@ -7,18 +6,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import InputError from "@/components/input-error";
 import { LoaderCircle } from "lucide-react";
+import { DatePicker } from "@/components/date-picker"; // Import your DatePicker component
 
 export default function CertificationCreate() {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         issuer: "",
-        date: "",
+        date: "", // Initialize date as string
         url: "",
     });
+
+    const handleDateChange = (date: Date) => {
+        // Format the Date object to a string (YYYY-MM-DD)
+        const formattedDate = date.toISOString().split('T')[0];
+        setData("date", formattedDate);
+    };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route("admin.certifications.store"), {
+            ...data,
             preserveState: true,
             onSuccess: () => reset(),
         });
@@ -62,11 +69,9 @@ export default function CertificationCreate() {
                         </div>
                         <div>
                             <Label htmlFor="date">Date</Label>
-                            <Input
-                                id="date"
-                                type="date"
-                                value={data.date}
-                                onChange={(e) => setData("date", e.target.value)}
+                            <DatePicker
+                                value={data.date ? new Date(data.date) : undefined} // Pass Date object or undefined
+                                onChange={handleDateChange}
                             />
                             {errors.date && <InputError message={errors.date} />}
                         </div>

@@ -22,18 +22,7 @@ class ProjectFactory extends Factory
             'technologies'      => ['Laravel', 'React', 'Tailwind CSS'],
             'category'          => ['Portfolio', 'SaaS'],
             'image'             => $this->faker->imageUrl(640, 480, 'technics'),
-            'features'          => [
-                                        ['name' => 'Feature A', 'description' => 'Description A'],
-                                        ['name' => 'Feature B', 'description' => 'Description B']
-                                   ],
-            'process'           => [
-                                        ['title' => 'Step 1', 'description' => 'Do something', 'order' => 1],
-                                        ['title' => 'Step 2', 'description' => 'Do something else', 'order' => 2]
-                                   ],
-            'gallery'           => [
-                                        ['url' => $this->faker->imageUrl, 'caption' => 'Gallery image 1', 'order' => 1],
-                                        ['url' => $this->faker->imageUrl, 'caption' => 'Gallery image 2', 'order' => 2]
-                                   ],
+            
             'role'              => $this->faker->jobTitle,
             'challenge'         => $this->faker->sentence,
             'solution'          => $this->faker->sentence,

@@ -43,11 +43,11 @@ export default function ServicesSection() {
               className="border border-border/40 bg-background hover:shadow-lg transition-all duration-300 animate-on-scroll opacity-0"
               style={{ animationDelay: `${0.1 * index}s` }}
             >
-              <CardHeader>
+              <CardHeader className="flex  items-center">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   {iconMap[service.icon]}
                 </div>
-                <CardTitle>{service.title}</CardTitle>
+                <CardTitle className="mb-4">{service.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">{service.description}</p>

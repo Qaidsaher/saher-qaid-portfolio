@@ -25,9 +25,6 @@ return new class extends Migration
              // Depending on your needs, you can store one category as a string or multiple as JSON:
              $table->json('category')->nullable();
              $table->string('image')->nullable();
-             $table->json('features')->nullable();    // Array or JSON of feature objects
-             $table->json('process')->nullable();     // Array or JSON of process/steps
-             $table->json('gallery')->nullable();     // Array or JSON of gallery images
              $table->string('role')->nullable();
              $table->text('challenge')->nullable();
              $table->text('solution')->nullable();

@@ -1,16 +1,17 @@
+import React, { FormEvent } from 'react';
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import { format, parse } from 'date-fns';
+import AppLayout from '@/layouts/app-layout';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { MultiInput } from '@/components/multi-input';
+import DatePickerWithRange, { DateRange } from '@/components/date-picker-with-range';
 
-import React, { FormEvent } from "react";
-import { Head, useForm } from "@inertiajs/react";
-import { LoaderCircle } from "lucide-react";
-import AppLayout from "@/layouts/app-layout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import InputError from "@/components/input-error";
-import { MultiInput } from "@/components/multi-input";
-
-type Experience = {
+interface Experience {
   id: number;
   title: string;
   company: string;
@@ -20,25 +21,12 @@ type Experience = {
   responsibilities: string[];
   achievements: string[];
   technologies: string[];
-};
-
-type ExperienceFormType = {
-  title: string;
-  company: string;
-  period: string;
-  location: string;
-  description: string;
-  responsibilities: string[];
-  achievements: string[];
-  technologies: string[];
-};
-
-interface Props {
-  experience: Experience;
 }
 
+interface Props { experience: Experience; }
+
 export default function ExperienceEdit({ experience }: Props) {
-  const { data, setData, put, processing, errors } = useForm<ExperienceFormType>({
+  const { data, setData, put, processing, errors } = useForm({
     title: experience.title,
     company: experience.company,
     period: experience.period,
@@ -49,15 +37,25 @@ export default function ExperienceEdit({ experience }: Props) {
     technologies: experience.technologies,
   });
 
+  const [dateRange, setDateRange] = React.useState<DateRange>(() => {
+    const [fromStr, toStr] = experience.period.split(' - ');
+    return {
+      from: parse(fromStr, 'MMM yyyy', new Date()),
+      to: parse(toStr, 'MMM yyyy', new Date()),
+    };
+  });
+
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    put(route("admin.experiences.update", experience.id));
+    if (!dateRange.from || !dateRange.to) return;
+    setData('period', `${format(dateRange.from,'MMM yyyy')} - ${format(dateRange.to,'MMM yyyy')}`);
+    put(route('admin.experiences.update', experience.id));
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: route("admin.dashboard") },
-    { title: "Experiences", href: route("admin.experiences.index") },
-    { title: "Edit Experience", href: route("admin.experiences.edit", experience.id) },
+    { title: 'Dashboard', href: route('admin.dashboard') },
+    { title: 'Experiences', href: route('admin.experiences.index') },
+    { title: 'Edit Experience', href: route('admin.experiences.edit', experience.id) },
   ];
 
   return (
@@ -70,86 +68,80 @@ export default function ExperienceEdit({ experience }: Props) {
             <Label htmlFor="title">Job Title</Label>
             <Input
               id="title"
-              type="text"
               value={data.title}
-              onChange={(e) => setData("title", e.target.value)}
-              placeholder="e.g. Senior Software Engineer"
+              onChange={(e) => setData('title', e.target.value)}
               disabled={processing}
             />
             <InputError message={errors.title} />
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="company">Company</Label>
             <Input
               id="company"
-              type="text"
               value={data.company}
-              onChange={(e) => setData("company", e.target.value)}
-              placeholder="e.g. ACME Corp"
+              onChange={(e) => setData('company', e.target.value)}
               disabled={processing}
             />
             <InputError message={errors.company} />
           </div>
-          {/* For editing, we assume period remains a simple text value. If you need to reinitialize your date picker, add similar logic as in create */}
+
           <div className="grid gap-2">
-            <Label htmlFor="period">Period</Label>
-            <Input
-              id="period"
-              type="text"
-              value={data.period}
-              onChange={(e) => setData("period", e.target.value)}
-              placeholder="e.g. Jan 2020 - Dec 2020"
-              disabled={processing}
-            />
+            <Label>Period</Label>
+            <DatePickerWithRange initialRange={dateRange} onRangeSelect={setDateRange} />
             <InputError message={errors.period} />
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"
-              type="text"
               value={data.location}
-              onChange={(e) => setData("location", e.target.value)}
-              placeholder="e.g. New York, USA"
+              onChange={(e) => setData('location', e.target.value)}
               disabled={processing}
             />
             <InputError message={errors.location} />
           </div>
+
           <div className="grid col-span-2 gap-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
               value={data.description}
-              onChange={(e) => setData("description", e.target.value)}
-              placeholder="Describe your role and achievements"
+              onChange={(e) => setData('description', e.target.value)}
               disabled={processing}
+              rows={4}
             />
             <InputError message={errors.description} />
           </div>
+
           <div className="col-span-2">
             <MultiInput
               label="Responsibilities"
               values={data.responsibilities}
-              onChange={(vals) => setData("responsibilities", vals)}
+              onChange={(vals) => setData('responsibilities', vals)}
               placeholder="Enter a responsibility"
             />
           </div>
+
           <div className="col-span-2">
             <MultiInput
               label="Achievements"
               values={data.achievements}
-              onChange={(vals) => setData("achievements", vals)}
+              onChange={(vals) => setData('achievements', vals)}
               placeholder="Enter an achievement"
             />
           </div>
+
           <div className="col-span-2">
             <MultiInput
               label="Technologies"
               values={data.technologies}
-              onChange={(vals) => setData("technologies", vals)}
+              onChange={(vals) => setData('technologies', vals)}
               placeholder="Enter a technology"
             />
           </div>
+
           <div className="flex col-span-2 justify-end">
             <Button type="submit" disabled={processing}>
               {processing && <LoaderCircle className="w-4 h-4 animate-spin mr-2" />}

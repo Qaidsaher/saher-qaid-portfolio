@@ -1,4 +1,4 @@
- 
+
 import React, { useState } from "react";
 import { Head, usePage, useForm, Link } from "@inertiajs/react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -207,6 +207,12 @@ export default function TestimonialsPage() {
                       alt={testimonial.name}
                       width={48}
                       height={48}
+                      onError={(e) => {
+                        // only run once
+                        e.currentTarget.onerror = null;
+                        // point to a local placeholder in your public folder
+                        e.currentTarget.src = '"/placeholder.svg"';
+                      }}
                       className="object-cover w-full h-full"
                     />
                   </div>

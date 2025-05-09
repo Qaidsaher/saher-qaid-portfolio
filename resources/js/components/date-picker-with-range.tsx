@@ -1,150 +1,119 @@
-// components/DatePickerWithRange.tsx
-import React, { useState, useEffect, useRef } from "react";
-import { addDays } from "date-fns";
+import * as React from "react";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
-export type DateRange = {
-  from: Date | null;
-  to: Date | null;
-};
+export type DateRange = { from: Date | null; to: Date | null };
 
-export type DatePickerWithRangeProps = React.HTMLAttributes<HTMLDivElement> & {
-  onSelect?: (range: DateRange) => void;
+export interface DatePickerWithRangeProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
   initialRange?: DateRange;
-};
+  onRangeSelect?: (range: DateRange) => void;
+}
 
-export function DatePickerWithRange({
-  className = "",
-  onSelect,
+export const DatePickerWithRange: React.FC<DatePickerWithRangeProps> = ({
   initialRange,
+  onRangeSelect,
+  className = "",
   ...props
-}: DatePickerWithRangeProps) {
-  // Use provided initial range or default values.
-  const defaultRange: DateRange = initialRange ?? {
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  };
-
-  const [range, setRange] = useState<DateRange>(defaultRange);
-  // "selecting" indicates whether the next click will define the start or the end of the range.
-  const [selecting, setSelecting] = useState<"start" | "end">("start");
-  const [showCalendar, setShowCalendar] = useState<boolean>(false);
-
-  // Display two months in the calendar. The first month is controlled by these state values.
-  const [currentMonth, setCurrentMonth] = useState<number>(
-    (range.from ?? new Date()).getMonth()
+}) => {
+  const defaultRange = initialRange ?? { from: null, to: null };
+  const [range, setRange] = React.useState<DateRange>(defaultRange);
+  const [selecting, setSelecting] = React.useState<"start" | "end">("start");
+  const [showCalendar, setShowCalendar] = React.useState(false);
+  const [currentMonth, setCurrentMonth] = React.useState(
+    (initialRange?.from ?? initialRange?.to ?? new Date()).getMonth()
   );
-  const [currentYear, setCurrentYear] = useState<number>(
-    (range.from ?? new Date()).getFullYear()
+  const [currentYear, setCurrentYear] = React.useState(
+    (initialRange?.from ?? initialRange?.to ?? new Date()).getFullYear()
   );
 
-  const popoverRef = useRef<HTMLDivElement>(null);
+  const popoverRef = React.useRef<HTMLDivElement>(null);
 
-  // Close calendar if clicking outside.
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+  React.useEffect(() => {
+    const base = initialRange?.from ?? initialRange?.to ?? new Date();
+    setRange(initialRange ?? { from: null, to: null });
+    setCurrentMonth(base.getMonth());
+    setCurrentYear(base.getFullYear());
+  }, [initialRange]);
+
+  React.useEffect(() => {
+    const onClickOutside = (e: MouseEvent) => {
       if (
         popoverRef.current &&
-        !popoverRef.current.contains(event.target as Node)
+        !popoverRef.current.contains(e.target as Node)
       ) {
         setShowCalendar(false);
+        if (selecting === "end" && !range.to) {
+          setSelecting("start");
+        }
       }
     };
-    if (showCalendar) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showCalendar]);
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [showCalendar, selecting, range]);
 
-  // Helpers for day comparison (ignoring time).
-  const isSameDay = (d1: Date, d2: Date) =>
-    d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate();
+  const isSameDay = (a: Date | null, b: Date | null) =>
+    a?.toDateString() === b?.toDateString();
+  const isInRange = (d: Date, start: Date | null, end: Date | null) =>
+    start && end && d >= start && d <= end;
 
-  const isInRange = (day: Date, start: Date, end: Date) => day >= start && day <= end;
-
-  // Handle clicking on a day:
   const handleDayClick = (day: Date) => {
     if (selecting === "start") {
-      // Start a new range.
-      const newRange = { from: day, to: null };
-      setRange(newRange);
+      setRange({ from: day, to: null });
       setSelecting("end");
     } else {
-      // When selecting "end", ensure the chosen day is on or after "from".
       if (range.from && day >= range.from) {
-        const newRange = { ...range, to: day };
-        setRange(newRange);
+        const newR = { from: range.from, to: day };
+        setRange(newR);
         setSelecting("start");
         setShowCalendar(false);
-        onSelect && onSelect(newRange);
+        onRangeSelect?.(newR);
       } else {
-        // If the day is earlier than the current "from", start a new range.
-        const newRange = { from: day, to: null };
-        setRange(newRange);
+        setRange({ from: day, to: null });
         setSelecting("end");
       }
     }
   };
 
-  // Render a calendar for a specific month and year.
-  const renderCalendarMonth = (month: number, year: number) => {
-    // Determine which day of the week the first day of this month falls on.
-    const firstDayOfMonth = new Date(year, month, 1).getDay();
-    // Get the number of days in this month.
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    // Create an array of blank placeholders for days before the 1st.
-    const blankDays = Array.from({ length: firstDayOfMonth });
-    // Create an array of day numbers.
-    const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+  const renderMonth = (month: number, year: number) => {
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysCount = new Date(year, month + 1, 0).getDate();
+    const blanks = Array.from({ length: firstDay });
+    const days = Array.from({ length: daysCount }, (_, i) => i + 1);
 
     return (
-      <div className="w-full" key={`calendar-${year}-${month}`}>
-        <div className="flex items-center justify-center py-2 font-medium">
-          {new Date(year, month).toLocaleString(undefined, {
-            month: "long",
-            year: "numeric",
-          })}
+      <div key={`${year}-${month}`} className="w-full">
+        <div className="text-center py-1 text-sm font-medium">
+          {format(new Date(year, month), "MMMM yyyy")}
         </div>
-        <div className="grid grid-cols-7 gap-1">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dow) => (
-            <div key={dow} className="text-xs text-center font-medium text-gray-500">
-              {dow}
-            </div>
+        <div className="grid grid-cols-7 gap-0.5 mb-1 text-xs text-center text-muted-foreground">
+          {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
+            <div key={d}>{d}</div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-1 p-2">
-          {blankDays.map((_, index) => (
-            <div key={`blank-${index}`} className="w-8 h-8" />
+        <div className="grid grid-cols-7 gap-0.5 p-1">
+          {blanks.map((_, i) => (
+            <div key={i} className="h-8" />
           ))}
-          {daysArray.map((day) => {
-            const dayDate = new Date(year, month, day);
-            const isSelectedStart = range.from && isSameDay(dayDate, range.from);
-            const isSelectedEnd = range.to && isSameDay(dayDate, range.to);
-            const isBetween =
-              range.from &&
-              range.to &&
-              !isSelectedStart &&
-              !isSelectedEnd &&
-              isInRange(dayDate, range.from, range.to);
+          {days.map((d) => {
+            const date = new Date(year, month, d);
+            const start = isSameDay(date, range.from);
+            const end = isSameDay(date, range.to);
+            const between = isInRange(date, range.from, range.to) && !start && !end;
+            let btnCls = "flex items-center justify-center w-8 h-8 text-sm ";
+            if (start || end) btnCls += "bg-primary text-primary-foreground rounded-full";
+            else if (between) btnCls += "bg-primary/20 text-primary";
+            else btnCls += "hover:bg-muted-foreground text-foreground rounded-full";
             return (
               <button
-                key={day}
-                onClick={() => handleDayClick(dayDate)}
-                className={`w-8 h-8 rounded-full text-sm text-center
-                  ${
-                    isSelectedStart || isSelectedEnd
-                      ? "bg-blue-500 text-white"
-                      : "text-gray-700 hover:bg-gray-200"
-                  }
-                  ${isBetween ? "bg-blue-200" : ""}`}
+                key={d}
+                type="button"
+                className={btnCls}
+                onClick={() => handleDayClick(date)}
               >
-                {day}
+                {d}
               </button>
             );
           })}
@@ -153,70 +122,73 @@ export function DatePickerWithRange({
     );
   };
 
-  // Determine the second month (the month following the current month).
-  const secondMonthDate = new Date(currentYear, currentMonth + 1);
-  const secondMonth = secondMonthDate.getMonth();
-  const secondYear = secondMonthDate.getFullYear();
+  const nextMonth = new Date(currentYear, currentMonth + 1);
+  const prevMonth = new Date(currentYear, currentMonth - 1);
+
+  const displayText = () => {
+    if (range.from && range.to)
+      return `${format(range.from, "PPP")} – ${format(range.to, "PPP")}`;
+    if (range.from && selecting === "end")
+      return `${format(range.from, "PPP")} – select end`;
+    if (range.from) return format(range.from, "PPP");
+    return "Select date range";
+  };
 
   return (
-    <div className={`grid gap-2 ${className}`} {...props} ref={popoverRef}>
+    <div
+      {...props}
+      ref={popoverRef}
+      className={cn("relative w-full", className)}
+    >
+      {/* Trigger Input */}
       <div className="relative">
-        <button
-          onClick={() => setShowCalendar((prev) => !prev)}
-          className="flex items-center justify-between w-full px-4 py-2 border rounded-md bg-white text-gray-700 hover:bg-gray-100 focus:outline-none"
-        >
-          <span>
-            {range.from ? (
-              range.to ? (
-                `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`
-              ) : (
-                range.from.toLocaleDateString()
-              )
-            ) : (
-              "Select Date Range"
-            )}
-          </span>
-          <CalendarIcon className="w-5 h-5 text-gray-500" />
-        </button>
-        {showCalendar && (
-          <div className="absolute mt-2 w-full bg-white border rounded-md shadow-lg z-10">
-            {/* Navigation for both calendars */}
-            <div className="flex justify-between p-2 border-b">
-              <button
-                onClick={() => {
-                  if (currentMonth === 0) {
-                    setCurrentMonth(11);
-                    setCurrentYear((prev) => prev - 1);
-                  } else {
-                    setCurrentMonth((prev) => prev - 1);
-                  }
-                }}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                &lt;
-              </button>
-              <button
-                onClick={() => {
-                  if (currentMonth === 11) {
-                    setCurrentMonth(0);
-                    setCurrentYear((prev) => prev + 1);
-                  } else {
-                    setCurrentMonth((prev) => prev + 1);
-                  }
-                }}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                &gt;
-              </button>
-            </div>
-            {/* Two-month view */}
-            <div className="flex space-x-4 p-2">
-              {renderCalendarMonth(currentMonth, currentYear)}
-              {renderCalendarMonth(secondMonth, secondYear)}
-            </div>
-          </div>
-        )}
+        <Input
+          readOnly
+          value={displayText()}
+          placeholder="Select date range"
+          onClick={() => setShowCalendar((v) => !v)}
+          className="cursor-pointer pr-10"
+        />
+        <CalendarIcon className="pointer-events-none absolute right-3 top-1/2 w-5 h-5 -translate-y-1/2 text-muted-foreground" />
       </div>
+
+      {/* Calendar Popover */}
+      {showCalendar && (
+        <div
+          className={cn(
+            "absolute z-20 mt-1 w-auto min-w-[24rem] rounded-md border border-input bg-background p-2 shadow-xs"
+          )}
+        >
+          <div className="flex items-center justify-between px-1 py-1">
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentMonth(prevMonth.getMonth());
+                setCurrentYear(prevMonth.getFullYear());
+              }}
+              className="p-1 rounded hover:bg-muted-foreground text-foreground"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentMonth(nextMonth.getMonth());
+                setCurrentYear(nextMonth.getFullYear());
+              }}
+              className="p-1 rounded hover:bg-muted-foreground text-foreground"
+            >
+              ›
+            </button>
+          </div>
+          <div className="flex space-x-2">
+            {renderMonth(currentMonth, currentYear)}
+            {renderMonth(nextMonth.getMonth(), nextMonth.getFullYear())}
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default DatePickerWithRange;

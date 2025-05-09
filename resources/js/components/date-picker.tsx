@@ -1,155 +1,127 @@
-// components/DatePicker.tsx
-import React, { useState, useEffect, useRef } from 'react';
-import { Calendar } from 'lucide-react'; // Importing the Calendar icon
+import * as React from "react";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 type DatePickerProps = {
   value?: Date;
   onChange: (date: Date) => void;
 };
 
-export function DatePicker({ value, onChange }: DatePickerProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>(value || new Date());
-  const [currentMonth, setCurrentMonth] = useState<number>(
-    (value || new Date()).getMonth()
-  );
-  const [currentYear, setCurrentYear] = useState<number>(
-    (value || new Date()).getFullYear()
-  );
-  const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  const calendarRef = useRef<HTMLDivElement>(null);
+export const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(value);
+  const [displayDate, setDisplayDate] = React.useState<Date>(value || new Date());
+  const [showCalendar, setShowCalendar] = React.useState<boolean>(false);
+  const calendarRef = React.useRef<HTMLDivElement>(null);
 
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  React.useEffect(() => {
+    setSelectedDate(value);
+    setDisplayDate(value || new Date());
+  }, [value]);
 
-  const getDaysInMonth = (month: number, year: number): number => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-
-  const getFirstDayOfMonth = (month: number, year: number): number => {
-    return new Date(year, month, 1).getDay();
-  };
-
-  const handleDateClick = (day: number) => {
-    const newDate = new Date(currentYear, currentMonth, day);
-    setSelectedDate(newDate);
-    onChange(newDate);
-    setShowCalendar(false);
-  };
-
-  const handlePrevMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear((prev) => prev - 1);
-    } else {
-      setCurrentMonth((prev) => prev - 1);
-    }
-  };
-
-  const handleNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear((prev) => prev + 1);
-    } else {
-      setCurrentMonth((prev) => prev + 1);
-    }
-  };
-
-  const formatDate = (date: Date): string => {
-    return date.toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        calendarRef.current &&
-        !calendarRef.current.contains(event.target as Node)
-      ) {
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
         setShowCalendar(false);
       }
     };
-    if (showCalendar) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showCalendar]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  const daysInMonth = getDaysInMonth(currentMonth, currentYear);
-  const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
+  const month = displayDate.getMonth();
+  const year = displayDate.getFullYear();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
   const blankDays = Array.from({ length: firstDay });
   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
+  const selectDate = (day: number) => {
+    const d = new Date(year, month, day);
+    setSelectedDate(d);
+    onChange(d);
+    setShowCalendar(false);
+  };
+
   return (
     <div className="relative w-full" ref={calendarRef}>
-      <button
-        onClick={() => setShowCalendar((prev) => !prev)}
-        className="flex items-center justify-between w-full px-4 py-2 border rounded-md bg-white text-gray-700 hover:bg-gray-100 focus:outline-none"
-      >
-        <span>
-          {selectedDate ? formatDate(selectedDate) : 'Select Date'}
-        </span>
-        <Calendar className="w-5 h-5 text-gray-500" />
-      </button>
+      {/* Input + Icon wrapper */}
+      <div className="relative">
+        <Input
+          readOnly
+          value={selectedDate ? format(selectedDate, "PPP") : ""}
+          placeholder="Select date"
+          onClick={() => setShowCalendar((v) => !v)}
+          className="cursor-pointer pr-10"
+        />
+        <CalendarIcon className="pointer-events-none absolute right-3 top-1/2 w-5 h-5 -translate-y-1/2 text-muted-foreground" />
+      </div>
+
       {showCalendar && (
-        <div className="absolute mt-2 w-full bg-white border rounded-md shadow-lg z-10">
-          <div className="flex items-center justify-between px-4 py-2">
+        <div
+          className={cn(
+            "absolute z-10 mt-1 w-full rounded-md border border-input bg-background p-2 shadow-xs"
+          )}
+        >
+          <div className="flex items-center justify-between px-1 py-1">
             <button
-              onClick={handlePrevMonth}
-              className="text-gray-500 hover:text-gray-700"
+              type="button"
+              onClick={() =>
+                setDisplayDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1))
+              }
+              className="p-1 rounded hover:bg-muted"
             >
-              &lt;
+              ‹
             </button>
-            <span className="text-gray-700 font-medium">
-              {new Date(currentYear, currentMonth).toLocaleString(undefined, {
-                month: 'long',
-                year: 'numeric',
-              })}
+            <span className="text-sm font-medium">
+              {format(displayDate, "MMMM yyyy")}
             </span>
             <button
-              onClick={handleNextMonth}
-              className="text-gray-500 hover:text-gray-700"
+              type="button"
+              onClick={() =>
+                setDisplayDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1))
+              }
+              className="p-1 rounded hover:bg-muted"
             >
-              &gt;
+              ›
             </button>
           </div>
-          <div className="grid grid-cols-7 gap-1 px-4">
-            {daysOfWeek.map((day) => (
-              <div
-                key={day}
-                className="text-xs font-medium text-center text-gray-500"
-              >
-                {day}
-              </div>
+
+          <div className="grid grid-cols-7 gap-1 px-1 mt-2 text-xs text-center text-muted-foreground">
+            {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(d => (
+              <div key={d}>{d}</div>
             ))}
           </div>
-          <div className="grid grid-cols-7 gap-1 p-4">
-            {blankDays.map((_, index) => (
-              <div key={index} />
+
+          <div className="grid grid-cols-7 gap-1 px-1 mt-1">
+            {blankDays.map((_, i) => (
+              <div key={i} className="h-8" />
             ))}
-            {daysArray.map((day) => (
-              <button
-                key={day}
-                onClick={() => handleDateClick(day)}
-                className={`text-sm text-center rounded-full w-8 h-8 ${
-                  selectedDate.getDate() === day &&
-                  selectedDate.getMonth() === currentMonth &&
-                  selectedDate.getFullYear() === currentYear
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {day}
-              </button>
-            ))}
+            {daysArray.map(day => {
+              const isSelected =
+                selectedDate?.getDate() === day &&
+                selectedDate?.getMonth() === month &&
+                selectedDate?.getFullYear() === year;
+              return (
+                <button
+                  key={day}
+                  type="button"
+                  onClick={() => selectDate(day)}
+                  className={cn(
+                    "flex h-8 w-8 items-center justify-center rounded-full text-sm",
+                    isSelected
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted-foreground"
+                  )}
+                >
+                  {day}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
     </div>
   );
-}
+};

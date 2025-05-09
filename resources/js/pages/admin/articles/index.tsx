@@ -1,9 +1,9 @@
-
 import React, { useState } from "react";
 import { Head, Link, usePage, useForm } from "@inertiajs/react";
 import AppLayout from "@/layouts/app-layout";
-import { Eye, Edit, Plus, Trash } from "lucide-react";
+import { Card, CardHeader, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { FileText, Calendar, Eye, Edit, Trash, Plus } from "lucide-react";
 import ConfirmModal from "@/components/confirm-model";
 
 interface Article {
@@ -13,18 +13,14 @@ interface Article {
   publish_date: string;
 }
 
-interface CustomPageProps extends Record<string, any> {
+interface PageProps extends Record<string, any> {
   articles: Article[];
 }
 
-const breadcrumbs = [
-  { title: "Dashboard", href: route("admin.dashboard") },
-  { title: "Articles", href: route("admin.articles.index") },
-];
+declare function route(name: string, params?: any): string;
 
-export default function IndexArticle() {
-  // Get articles from Inertia page props
-  const { articles } = usePage<CustomPageProps>().props;
+export default function ArticlesIndex() {
+  const { articles = [] } = usePage<PageProps>().props;
   const deletionForm = useForm({});
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -49,16 +45,22 @@ export default function IndexArticle() {
     setDeleteId(null);
   };
 
+  const breadcrumbs = [
+    { title: "Dashboard", href: route("admin.dashboard") },
+    { title: "Articles", href: route("admin.articles.index") },
+  ];
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Manage Articles" />
-      <div className="px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Manage Articles</h1>
-          <Button asChild className="flex items-center">
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Manage Articles</h1>
+          <Button asChild className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white">
             <Link href={route("admin.articles.create")}>
-              <Plus className="mr-2" size={20} />
-              Create Article
+              <Plus className="w-5 h-5" />
+              <span>Create Article</span>
             </Link>
           </Button>
         </div>
@@ -71,59 +73,61 @@ export default function IndexArticle() {
           onCancel={cancelDeletion}
         />
 
-        <div className=" shadow rounded-lg">
-          {articles.length > 0 ? (
-            <div className="divide-y divide-gray-200">
-              {articles.map((article) => (
-                <div
-                  key={article.id}
-                  className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between"
-                >
-                  <div className="flex-1">
-                    <h2 className="text-xl font-semibold">
-                      <Link
-                        href={route("admin.articles.show", article.id)}
-                        className="hover:underline"
-                      >
+        {articles.length === 0 ? (
+          <p className="text-center text-gray-500">No articles found.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {articles.map((article) => (
+              <Card
+                key={article.id}
+                className="bg-white rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition-all"
+              >
+                <CardHeader className="pb-0">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-start space-x-2 flex-1">
+                      <FileText className="w-6 h-6 text-indigo-500 mt-1" />
+                      <CardTitle className="text-lg font-semibold line-clamp-2 leading-snug">
                         {article.title}
-                      </Link>
-                    </h2>
-                    <p className="mt-1 text-gray-600">{article.excerpt}</p>
-                    <p className="mt-2 text-sm text-gray-500">
-                      Published on: {article.publish_date}
-                    </p>
+                      </CardTitle>
+                    </div>
+                    <div className="flex items-center text-gray-500 text-sm space-x-1 ml-4 flex-shrink-0">
+                      <Calendar className="w-4 h-4 text-gray-400" />
+                      <span className="whitespace-nowrap">{article.publish_date}</span>
+                    </div>
                   </div>
-                  <div className="mt-4 sm:mt-0 flex gap-2">
-                    <Button asChild variant="ghost" title="View Article">
-                      <Link href={route("admin.articles.show", article.id)}>
-                        <Eye size={20} className="mr-1" />
-                        <span className="hidden sm:inline">View</span>
-                      </Link>
-                    </Button>
-                    <Button asChild variant="outline" title="Edit Article">
-                      <Link href={route("admin.articles.edit", article.id)}>
-                        <Edit size={20} className="mr-1" />
-                        <span className="hidden sm:inline">Edit</span>
-                      </Link>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => handleDeleteClick(article.id)}
-                      className="flex items-center"
-                    >
-                      <Trash size={20} className="mr-1" />
-                      <span className="hidden sm:inline">Delete</span>
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="p-4 text-center text-gray-500">
-              No articles found.
-            </div>
-          )}
-        </div>
+                </CardHeader>
+
+                <CardContent className="py-2">
+                  <p className="text-gray-600 overflow-hidden text-ellipsis line-clamp-3">
+                    {article.excerpt}
+                  </p>
+                </CardContent>
+
+                <CardFooter className="pt-2 flex justify-end space-x-2">
+                  <Button asChild variant="ghost" size="icon" title="View" className="text-green-600 hover:bg-green-100">
+                    <Link href={route("admin.articles.show", article.id)}>
+                      <Eye className="w-5 h-5" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="ghost" size="icon" title="Edit" className="text-yellow-600 hover:bg-yellow-100">
+                    <Link href={route("admin.articles.edit", article.id)}>
+                      <Edit className="w-5 h-5" />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    title="Delete"
+                    onClick={() => handleDeleteClick(article.id)}
+                    className="text-red-600 hover:bg-red-100"
+                  >
+                    <Trash className="w-5 h-5" />
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </AppLayout>
   );

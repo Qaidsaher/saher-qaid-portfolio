@@ -5,6 +5,7 @@ import AppLayout from "@/layouts/app-layout";
 import { Button } from "@/components/ui/button";
 import { Trash, Edit, Eye } from "lucide-react";
 import ConfirmModal from "@/components/confirm-model";
+import DeleteModal from "@/components/delete-model";
 
 interface Service {
     id: number;
@@ -17,29 +18,6 @@ export default function ServiceIndex() {
     // Assuming services are passed via Inertia page props (as a plain array or use services.data if paginated)
     const { services } = usePage().props as unknown as { services: Service[] };
 
-    const deletionForm = useForm({});
-    const [deleteId, setDeleteId] = useState<number | null>(null);
-    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-
-    const handleDeleteClick = (id: number) => {
-        setDeleteId(id);
-        setConfirmModalOpen(true);
-    };
-
-    const confirmDeletion = () => {
-        if (deleteId) {
-            deletionForm.delete(route("admin.services.destroy", deleteId), {
-                preserveState: true,
-            });
-        }
-        setConfirmModalOpen(false);
-        setDeleteId(null);
-    };
-
-    const cancelDeletion = () => {
-        setConfirmModalOpen(false);
-        setDeleteId(null);
-    };
 
     const breadcrumbs = [
         { title: "Dashboard", href: route("admin.dashboard") },
@@ -56,13 +34,7 @@ export default function ServiceIndex() {
                         <Link href={route("admin.services.create")}>Add Service</Link>
                     </Button>
                 </div>
-                <ConfirmModal
-                    open={confirmModalOpen}
-                    title="Confirm Deletion"
-                    message="Are you sure you want to delete this service? This action cannot be undone."
-                    onConfirm={confirmDeletion}
-                    onCancel={cancelDeletion}
-                />
+
                 {services.length === 0 ? (
                     <p>No services found.</p>
                 ) : (
@@ -91,14 +63,31 @@ export default function ServiceIndex() {
                                         <Edit className="w-4 h-4 mr-1" />
                                         Edit
                                     </Link>
-                                    <Button
-                                        variant="destructive"
-                                        onClick={() => handleDeleteClick(service.id)}
-                                        className="flex items-center"
-                                    >
-                                        <Trash className="w-4 h-4 mr-1" />
-                                        Delete
-                                    </Button>
+                                    <DeleteModal
+                                            trigger={
+                                                // <Tooltip>
+                                                    // <TooltipTrigger asChild>
+                                                        <Button variant="ghost" size="icon" className="text-red-600 hover:bg-red-100" title="Delete Service">
+                                                            <Trash className="w-5 h-5" />
+                                                        </Button>
+                                                    // </TooltipTrigger>
+                                                    // <TooltipContent><p>Delete Service</p></TooltipContent>
+                                                // </Tooltip>
+                                            }
+                                            title={`Delete Service?`}
+                                            description={
+                                                <>
+                                                    Are you sure you want to permanently delete the service
+                                                    <strong className="mx-1">{service.title}</strong>?
+                                                    <br />
+                                                    This action cannot be undone.
+                                                </>
+                                            }
+                                            deleteRouteName="admin.services.destroy"
+                                            // Adjust param name if needed ('service' vs 'id')
+                                            deleteRouteParams={{ service: service.id }}
+                                            // onSuccessCallback={handleSuccessfulDelete}
+                                        />
                                 </div>
                             </div>
                         ))}

@@ -1,19 +1,18 @@
 
-import React, { FormEventHandler, useState } from "react";
-import { Head, useForm } from "@inertiajs/react";
-import { LoaderCircle } from "lucide-react";
-import { DateRange } from "react-day-picker";
-import { format } from "date-fns";
-import AppLayout from "@/layouts/app-layout";
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { MultiInput } from "@/components/multi-input";
-import { DatePickerWithRange } from "@/components/date-picker-with-range";
+import React, { FormEventHandler, useState } from 'react';
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import { format } from 'date-fns';
+import AppLayout from '@/layouts/app-layout';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { MultiInput } from '@/components/multi-input';
+import DatePickerWithRange, { DateRange } from '@/components/date-picker-with-range';
 
-type ExperienceFormType = {
+interface ExperienceFormType {
   title: string;
   company: string;
   period: string;
@@ -22,48 +21,45 @@ type ExperienceFormType = {
   responsibilities: string[];
   achievements: string[];
   technologies: string[];
-};
+}
 
 export default function ExperienceCreate() {
   const { data, setData, post, processing, errors, reset } = useForm<ExperienceFormType>({
-    title: "",
-    company: "",
-    period: "",
-    location: "",
-    description: "",
+    title: '',
+    company: '',
+    period: '',
+    location: '',
+    description: '',
     responsibilities: [],
     achievements: [],
     technologies: [],
   });
 
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [dateRange, setDateRange] = useState<DateRange>({ from: null, to: null });
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
-    if (!dateRange || !dateRange.from || !dateRange.to) {
-      alert("Please select a date range for the period.");
-      return;
-    }
-    if (dateRange.from.getTime() > dateRange.to.getTime()) {
-      alert("Please select a valid date range (start must be before end).");
-      return;
-    }
-    const formattedPeriod = `${format(dateRange.from, "MMM yyyy")} - ${format(dateRange.to, "MMM yyyy")}`;
-    setData("period", formattedPeriod);
+    if (!dateRange.from || !dateRange.to) return;
+    if (dateRange.from.getTime() > dateRange.to.getTime()) return;
 
-    post(route("admin.experiences.store"), {
+    const formatted =
+      `${format(dateRange.from, 'MMM yyyy')} - ${format(dateRange.to, 'MMM yyyy')}`;
+    setData('period', formatted);
+    data.period = formatted;
+    setData(data);
+    post(route('admin.experiences.store'), {
       preserveState: true,
       onSuccess: () => {
         reset();
-        setDateRange(undefined);
+        setDateRange({ from: null, to: null });
       },
     });
   };
 
   const breadcrumbs = [
-    { title: "Dashboard", href: route("admin.dashboard") },
-    { title: "Experiences", href: route("admin.experiences.index") },
-    { title: "Create Experience", href: route("admin.experiences.create") },
+    { title: 'Dashboard', href: route('admin.dashboard') },
+    { title: 'Experiences', href: route('admin.experiences.index') },
+    { title: 'Create Experience', href: route('admin.experiences.create') },
   ];
 
   return (
@@ -71,83 +67,97 @@ export default function ExperienceCreate() {
       <Head title="Create Experience" />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Create Experience</h1>
-        <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <form
+          onSubmit={submit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+          encType="multipart/form-data"
+        >
           <div className="grid gap-2">
             <Label htmlFor="title">Job Title</Label>
             <Input
               id="title"
-              type="text"
               value={data.title}
-              onChange={(e) => setData("title", e.target.value)}
+              onChange={(e) => setData('title', e.target.value)}
               placeholder="e.g. Senior Software Engineer"
               disabled={processing}
             />
             <InputError message={errors.title} />
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="company">Company</Label>
             <Input
               id="company"
-              type="text"
               value={data.company}
-              onChange={(e) => setData("company", e.target.value)}
+              onChange={(e) => setData('company', e.target.value)}
               placeholder="e.g. ACME Corp"
               disabled={processing}
             />
             <InputError message={errors.company} />
           </div>
+
           <div className="grid gap-2">
             <Label>Period</Label>
-            <DatePickerWithRange onSelect={setDateRange} className="w-full" />
+            <DatePickerWithRange
+              initialRange={dateRange}
+              onRangeSelect={setDateRange}
+              className="w-full"
+            />
             <InputError message={errors.period} />
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"
-              type="text"
               value={data.location}
-              onChange={(e) => setData("location", e.target.value)}
+              onChange={(e) => setData('location', e.target.value)}
               placeholder="e.g. New York, USA"
               disabled={processing}
             />
             <InputError message={errors.location} />
           </div>
+
           <div className="grid col-span-2 gap-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
               value={data.description}
-              onChange={(e) => setData("description", e.target.value)}
+              onChange={(e) => setData('description', e.target.value)}
               placeholder="Describe your role and achievements"
               disabled={processing}
+              rows={4}
             />
             <InputError message={errors.description} />
           </div>
+
           <div className="col-span-2">
             <MultiInput
               label="Responsibilities"
               values={data.responsibilities}
-              onChange={(vals) => setData("responsibilities", vals)}
+              onChange={(vals) => setData('responsibilities', vals)}
               placeholder="Enter a responsibility"
             />
           </div>
+
           <div className="col-span-2">
             <MultiInput
               label="Achievements"
               values={data.achievements}
-              onChange={(vals) => setData("achievements", vals)}
+              onChange={(vals) => setData('achievements', vals)}
               placeholder="Enter an achievement"
             />
           </div>
+
           <div className="col-span-2">
             <MultiInput
               label="Technologies"
               values={data.technologies}
-              onChange={(vals) => setData("technologies", vals)}
+              onChange={(vals) => setData('technologies', vals)}
               placeholder="Enter a technology"
             />
           </div>
+
           <div className="flex col-span-2 justify-end">
             <Button type="submit" disabled={processing}>
               {processing && <LoaderCircle className="h-4 w-4 animate-spin mr-2" />}

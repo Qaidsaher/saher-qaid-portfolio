@@ -8,24 +8,31 @@ type MultiInputProps = {
   values: string[];
   onChange: (values: string[]) => void;
   placeholder?: string;
+  disabled?: boolean; // Add this line
 };
 
-export function MultiInput({ label, values, onChange, placeholder }: MultiInputProps) {
+export function MultiInput({
+  label,
+  values,
+  onChange,
+  placeholder,
+  disabled = false, // Default to false
+}: MultiInputProps) {
   const [inputValue, setInputValue] = React.useState("");
 
   const addItem = () => {
-    if (inputValue.trim() === "") return;
+    if (inputValue.trim() === "" || disabled) return;
     onChange([...values, inputValue.trim()]);
     setInputValue("");
   };
 
   const removeItem = (index: number) => {
+    if (disabled) return;
     const newValues = [...values];
     newValues.splice(index, 1);
     onChange(newValues);
   };
 
-  // Add new item when Enter key is pressed
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -47,6 +54,7 @@ export function MultiInput({ label, values, onChange, placeholder }: MultiInputP
               type="button"
               onClick={() => removeItem(index)}
               className="text-red-500 focus:outline-none"
+              disabled={disabled}
             >
               x
             </button>
@@ -60,8 +68,9 @@ export function MultiInput({ label, values, onChange, placeholder }: MultiInputP
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
+          disabled={disabled}
         />
-        <Button type="button" onClick={addItem}>
+        <Button type="button" onClick={addItem} disabled={disabled}>
           Add
         </Button>
       </div>

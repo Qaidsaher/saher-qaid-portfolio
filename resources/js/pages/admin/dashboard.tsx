@@ -148,15 +148,15 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
         metric.trendDirection === 'up'
             ? TrendingUpIcon
             : metric.trendDirection === 'down'
-            ? TrendingDownIcon
-            : MinusIcon;
+                ? TrendingDownIcon
+                : MinusIcon;
 
     const trendColor =
         metric.trendDirection === 'up'
             ? 'text-green-600 dark:text-green-400'
             : metric.trendDirection === 'down'
-            ? 'text-red-600 dark:text-red-400'
-            : 'text-gray-500 dark:text-gray-400';
+                ? 'text-red-600 dark:text-red-400'
+                : 'text-gray-500 dark:text-gray-400';
 
     const trendPrefix = metric.trendDirection === 'up' ? '+' : '';
 
@@ -171,25 +171,25 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
                         </CardTitle>
                     </div>
                     <div className={`p-3 rounded-lg bg-primary/10 flex items-center justify-center`}
-                         style={iconColor ? { backgroundColor: `${iconColor}1A`, color: iconColor } : {}} // Inline style for specific color override
+                        style={iconColor ? { backgroundColor: `${iconColor}1A`, color: iconColor } : {}} // Inline style for specific color override
                     >
-                         <Icon className={`h-6 w-6 ${iconColor ? '' : 'text-primary'}`} />
+                        <Icon className={`h-6 w-6 ${iconColor ? '' : 'text-primary'}`} />
                     </div>
                 </div>
             </CardHeader>
             <CardContent className="pt-0 pb-4">
-                 <div className={`text-xs ${trendColor} flex items-center gap-1 font-medium`}>
-                        <TrendIcon className="h-4 w-4" />
-                        {trendPrefix}{metric.trendValue}% {footerText}
-                 </div>
+                <div className={`text-xs ${trendColor} flex items-center gap-1 font-medium`}>
+                    <TrendIcon className="h-4 w-4" />
+                    {trendPrefix}{metric.trendValue}% {footerText}
+                </div>
             </CardContent>
-             {/* Optional Footer Link */}
+            {/* Optional Footer Link */}
             {actionLink && (
-                 <CardFooter className="pt-0">
-                      <Button variant="link" className="p-0 h-auto text-sm text-primary" onClick={() => Inertia.visit(actionLink)}>
-                           View Details <ArrowRight className="ml-1 h-4 w-4" />
-                      </Button>
-                 </CardFooter>
+                <CardFooter className="pt-0">
+                    <Button variant="link" className="p-0 h-auto text-sm text-primary" onClick={() => Inertia.visit(actionLink)}>
+                        View Details <ArrowRight className="ml-1 h-4 w-4" />
+                    </Button>
+                </CardFooter>
             )}
         </Card>
     );
@@ -242,160 +242,179 @@ export default function Dashboard() {
                         metric={userCount}
                         footerText="vs last month"
                         Icon={Users}
-                        // iconColor="hsl(var(--chart-1))" // Use theme color implicitly or override if needed
+                    // iconColor="hsl(var(--chart-1))" // Use theme color implicitly or override if needed
                     />
                     <SummaryCard
                         title="Site Visitors"
                         metric={visitorCount}
                         footerText="vs last month"
                         Icon={Activity}
-                        // iconColor="hsl(var(--chart-2))"
+                    // iconColor="hsl(var(--chart-2))"
                     />
                     <SummaryCard
                         title="Projects"
                         metric={projectCount}
                         footerText="new projects"
                         Icon={Briefcase}
-                        // iconColor="hsl(var(--chart-3))"
+                    // iconColor="hsl(var(--chart-3))"
                     />
                     <SummaryCard
                         title="Articles"
                         metric={articleCount}
                         footerText="new articles"
                         Icon={FileText}
-                        // iconColor="hsl(var(--chart-4))"
+                    // iconColor="hsl(var(--chart-4))"
                     />
                 </div>
 
-                 {/* --- Charts Section --- */}
-                 <SectionTitle title="Analytics" />
-                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                {/* --- Charts Section --- */}
+                <SectionTitle title="Analytics" />
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     {/* Visitor Trend Chart (Line) */}
                     <Card className="dark:bg-gray-800">
-                         <CardHeader>
-                              <CardTitle>Visitor Trends</CardTitle>
-                              <CardDescription>Desktop vs Mobile visits over time</CardDescription>
-                         </CardHeader>
-                         <CardContent>
-                              <ChartContainer config={visitorChartConfig} className="h-[300px] w-full">
-                                   {/* ResponsiveContainer makes the chart adapt */}
-                                   <ResponsiveContainer width="100%" height="100%">
-                                        <LineChart
-                                             accessibilityLayer // Good for accessibility
-                                             data={visitorChartData}
-                                             margin={{ top: 5, right: 10, left: -10, bottom: 0 }} // Adjust margins
-                                        >
-                                             <XAxis
-                                                  dataKey="month"
-                                                  tickLine={false}
-                                                  axisLine={false}
-                                                  tickMargin={8}
-                                                  tickFormatter={(value) => value.slice(0, 3)} // Abbreviate month names
-                                                  className="text-xs text-gray-500 dark:text-gray-400"
-                                             />
-                                              <YAxis
-                                                  tickLine={false}
-                                                  axisLine={false}
-                                                  tickMargin={8}
-                                                  className="text-xs text-gray-500 dark:text-gray-400"
-                                              />
-                                             <ChartTooltip
-                                                  cursor={false}
-                                                  content={<ChartTooltipContent indicator="line" />} // Use shadcn tooltip
-                                             />
-                                             <ChartLegend content={<ChartLegendContent />} />
-                                             <Line
-                                                  dataKey="desktop"
-                                                  type="monotone"
-                                                  stroke="var(--color-desktop)"
-                                                  strokeWidth={2}
-                                                  dot={false} // Cleaner look without dots
-                                             />
-                                             <Line
-                                                  dataKey="mobile"
-                                                  type="monotone"
-                                                  stroke="var(--color-mobile)"
-                                                  strokeWidth={2}
-                                                  dot={false}
-                                             />
-                                        </LineChart>
-                                   </ResponsiveContainer>
-                              </ChartContainer>
-                         </CardContent>
+                        <CardHeader>
+                            <CardTitle>Visitor Trends</CardTitle>
+                            <CardDescription>Desktop vs Mobile visits over time</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <ChartContainer config={visitorChartConfig} className="h-[300px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <LineChart
+                                        accessibilityLayer
+                                        data={visitorChartData}
+                                        margin={{ top: 5, right: 10, left: -10, bottom: 0 }}
+                                    >
+                                        <XAxis
+                                            dataKey="month"
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tickMargin={8}
+                                            tickFormatter={(v) => v.slice(0, 3)}
+                                            className="text-xs text-gray-500 dark:text-gray-400"
+                                        />
+                                        <YAxis
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tickMargin={8}
+                                            className="text-xs text-gray-500 dark:text-gray-400"
+                                        />
+                                        <ChartTooltip
+                                            cursor={false}
+                                            content={<ChartTooltipContent indicator="line" />}
+                                        />
+                                        <ChartLegend content={<ChartLegendContent />} />
+
+                                        {/* Use your CSS vars for line colors */}
+                                        <Line
+                                            dataKey="desktop"
+                                            type="monotone"
+                                            stroke="var(--chart-1)"
+                                            strokeWidth={2}
+                                            dot={false}
+                                        />
+                                        <Line
+                                            dataKey="mobile"
+                                            type="monotone"
+                                            stroke="var(--chart-2)"
+                                            strokeWidth={2}
+                                            dot={false}
+                                        />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            </ChartContainer>
+                        </CardContent>
                     </Card>
 
-                     {/* Projects by Type (Pie) */}
-                     <Card className="dark:bg-gray-800 flex flex-col"> {/* Use flex-col for height */}
-                         <CardHeader>
-                              <CardTitle>Projects by Type</CardTitle>
-                              <CardDescription>Distribution of different project types</CardDescription>
-                         </CardHeader>
-                         <CardContent className="flex-1 pb-0"> {/* flex-1 to grow */}
-                              <ChartContainer
-                                   config={{}} // No specific config needed if colors are in data
-                                   className="h-[300px] w-full"
-                              >
-                                   <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                              <ChartTooltip
-                                                  content={<ChartTooltipContent hideLabel />} // Simpler tooltip
-                                              />
-                                             <Pie
-                                                  data={projectsByTypeData} // Use data with 'fill' property
-                                                  dataKey="count"
-                                                  nameKey="type"
-                                                  cx="50%"
-                                                  cy="50%"
-                                                  outerRadius={100} // Adjust size
-                                                  innerRadius={40} // Make it a donut chart
-                                                  labelLine={false} // Cleaner look
-                                                  label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: PieLabelRenderProps) => {
-                                                      // Optional: Custom label rendering
-                                                      const safeInnerRadius = Number(innerRadius) || 0;
-                                                      const safeOuterRadius = Number(outerRadius) || 0;
-                                                      const radius = safeInnerRadius + (safeOuterRadius - safeInnerRadius) * 0.5;
-                                                      // @ts-ignore - recharts types might be tricky here
-                                                      const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
-                                                      // @ts-ignore
-                                                      const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
-                                                      return (
-                                                          <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" className="text-xs font-medium">
-                                                              {`${((percent ?? 0) * 100).toFixed(0)}%`}
-                                                          </text>
-                                                      );
-                                                  }}
-                                             >
-                                                  {projectsByTypeData.map((entry, index) => (
-                                                       <Cell key={`cell-${index}`} fill={entry.fill} /* Use fill from data */ />
-                                                  ))}
-                                             </Pie>
-                                             <ChartLegend content={<ChartLegendContent nameKey="type" className="mt-4" />} />
-                                        </PieChart>
-                                   </ResponsiveContainer>
-                              </ChartContainer>
-                         </CardContent>
+                    {/* Projects by Type (Pie) */}
+                    <Card className="dark:bg-gray-800 flex flex-col">
+                        <CardHeader>
+                            <CardTitle>Projects by Type</CardTitle>
+                            <CardDescription>Distribution of different project types</CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-1 pb-0">
+                            <ChartContainer config={{}} className="h-[300px] w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                                        <Pie
+                                            data={projectsByTypeData}
+                                            dataKey="count"
+                                            nameKey="type"
+                                            cx="50%"
+                                            cy="50%"
+                                            outerRadius={100}
+                                            innerRadius={40}
+                                            labelLine={false}
+                                            label={({
+                                                cx,
+                                                cy,
+                                                midAngle,
+                                                innerRadius,
+                                                outerRadius,
+                                                percent,
+                                            }) => {
+                                                const radius =
+                                                    Number(innerRadius || 0) +
+                                                    (Number(outerRadius || 0) - Number(innerRadius || 0)) * 0.5;
+                                                const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
+                                                const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
+                                                return (
+                                                    <text
+                                                        x={x}
+                                                        y={y}
+                                                        fill="white"
+                                                        textAnchor="middle"
+                                                        dominantBaseline="central"
+                                                        className="text-xs font-medium"
+                                                    >
+                                                        {`${((percent ?? 0) * 100).toFixed(0)}%`}
+                                                    </text>
+                                                );
+                                            }}
+                                        >
+                                            {projectsByTypeData.map((entry, idx) => {
+                                                // Map each slice to one of your CSS chart vars in order
+                                                const chartVar = `--chart-${(idx % 5) + 1}`;
+                                                return (
+                                                    <Cell
+                                                        key={idx}
+                                                        fill={`var(${chartVar})`}
+                                                    />
+                                                );
+                                            })}
+                                        </Pie>
+                                        <ChartLegend
+                                            content={
+                                                <ChartLegendContent nameKey="type" className="mt-4" />
+                                            }
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </ChartContainer>
+                        </CardContent>
                     </Card>
                 </div>
+
 
 
                 {/* --- Detailed Stats Section --- */}
                 <SectionTitle title="Detailed Statistics" />
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                     {/* Add more SummaryCards as needed, grouped logically */}
-                     <SummaryCard title="Experiences" metric={experienceCount} footerText="updates" Icon={Briefcase} />
-                     <SummaryCard title="Services Offered" metric={serviceCount} footerText="changes" Icon={CheckCircle} />
-                     <SummaryCard title="Skills Added" metric={skillCount} footerText="new skills" Icon={Award} />
-                     <SummaryCard title="Education Records" metric={educationCount} footerText="additions" Icon={BookOpen} />
-                     <SummaryCard title="Certifications" metric={certificationCount} footerText="earned" Icon={CheckCircle} />
-                     <SummaryCard title="Awards Recieved" metric={awardCount} footerText="achievements" Icon={Trophy} />
-                     <SummaryCard title="Testimonials" metric={testimonialCount} footerText="new feedback" Icon={MessageCircle} />
-                     {/* Add more cards here */}
+                    {/* Add more SummaryCards as needed, grouped logically */}
+                    <SummaryCard title="Experiences" metric={experienceCount} footerText="updates" Icon={Briefcase} />
+                    <SummaryCard title="Services Offered" metric={serviceCount} footerText="changes" Icon={CheckCircle} />
+                    <SummaryCard title="Skills Added" metric={skillCount} footerText="new skills" Icon={Award} />
+                    <SummaryCard title="Education Records" metric={educationCount} footerText="additions" Icon={BookOpen} />
+                    <SummaryCard title="Certifications" metric={certificationCount} footerText="earned" Icon={CheckCircle} />
+                    <SummaryCard title="Awards Recieved" metric={awardCount} footerText="achievements" Icon={Trophy} />
+                    <SummaryCard title="Testimonials" metric={testimonialCount} footerText="new feedback" Icon={MessageCircle} />
+                    {/* Add more cards here */}
                 </div>
 
 
                 {/* --- Actions --- */}
                 {/* Keep actions minimal on dashboard, maybe link to full reports */}
-                 {/* Example: Link to a reports page */}
+                {/* Example: Link to a reports page */}
                 {/*
                 <div className="mt-8 flex justify-end">
                     <Button onClick={() => Inertia.visit(route('reports.index'))}>

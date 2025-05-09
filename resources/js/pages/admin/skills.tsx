@@ -1,8 +1,8 @@
- 
+
 
 import React, { useState, FormEventHandler } from "react";
 import { Head, useForm, usePage, Link } from "@inertiajs/react";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Trash } from "lucide-react";
 import AppLayout from "@/layouts/app-layout";
 import InputError from "@/components/input-error";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select";
+import DeleteModal from "@/components/delete-model";
 
 // Define the skill form type.
 type SkillForm = {
@@ -65,16 +66,12 @@ export default function Skill() {
         category: "",
     });
 
-    // A separate form instance for deletion.
-    const deletionForm = useForm({});
+
 
     // Local state to toggle editing mode.
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
 
-    // Local state for the confirm deletion modal.
-    const [deleteId, setDeleteId] = useState<number | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Submit handler for create/update.
     const submit: FormEventHandler = (e) => {
@@ -109,28 +106,7 @@ export default function Skill() {
         setEditingId(skill.id);
     };
 
-    // Open the confirm modal before deletion.
-    const handleDeleteClick = (id: number) => {
-        setDeleteId(id);
-        setIsModalOpen(true);
-    };
 
-    // Confirm deletion.
-    const confirmDelete = () => {
-        if (deleteId) {
-            deletionForm.delete(route("admin.skills.destroy", deleteId), {
-                preserveState: true,
-            });
-            setIsModalOpen(false);
-            setDeleteId(null);
-        }
-    };
-
-    // Cancel deletion.
-    const cancelDelete = () => {
-        setIsModalOpen(false);
-        setDeleteId(null);
-    };
 
     // List of skills from props.
     const skills: Skill[] = initialSkills;
@@ -138,13 +114,7 @@ export default function Skill() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Manage Skills" />
-            <ConfirmModal
-                open={isModalOpen}
-                title="Confirm Deletion"
-                message="Are you sure you want to delete this skill? This action cannot be undone."
-                onConfirm={confirmDelete}
-                onCancel={cancelDelete}
-            />
+
             <div className="px-8 py-8">
                 <h1 className="text-3xl font-bold mb-6">Manage Skills</h1>
 
@@ -264,9 +234,31 @@ export default function Skill() {
                                         <Button variant="outline" onClick={() => editSkill(skill)}>
                                             Edit
                                         </Button>
-                                        <Button variant="destructive" onClick={() => handleDeleteClick(skill.id)}>
-                                            Delete
-                                        </Button>
+                                        <DeleteModal
+                                        trigger={
+                                            // <Tooltip>
+                                            // <TooltipTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="text-red-600 hover:bg-red-100" title="Delete Skill">
+                                                <Trash className="w-5 h-5" />
+                                            </Button>
+                                            // </TooltipTrigger>
+                                            // <TooltipContent><p>Delete Education</p></TooltipContent>
+                                            // </Tooltip>
+                                        }
+                                        title={`Delete Skill?`}
+                                        description={
+                                            <>
+                                                Are you sure you want to permanently delete the Skill
+                                                <strong className="mx-1">{skill.name}</strong>?
+                                                <br />
+                                                This action cannot be undone.
+                                            </>
+                                        }
+                                        deleteRouteName="admin.skills.destroy"
+                                        // Adjust param name if needed ('service' vs 'id')
+                                        deleteRouteParams={{ id: skill.id }}
+                                    // onSuccessCallback={handleSuccessfulDelete}
+                                    />
                                     </div>
                                 </div>
                             ))}

@@ -41,6 +41,13 @@ export default function Header() {
         >
             <div className="max-w-7xl mx-auto px-6 flex h-16 items-center justify-between ">
                 <Link href="/" className="flex items-center space-x-2">
+                    {/* Logo from public folder */}
+                    {/* <img
+                        src="/logo.png"      // <-- public/saherq-dev-logo.png
+                        alt="SaherQ Dev Logo"
+                        className="h-8 w-auto rounded-full"          // tailwind: 2rem tall, auto width
+                    /> */}
+
                     <span className="text-xl font-bold">
                         {((website as { websiteName: string })?.websiteName) ?? "SaherQ Dev"}</span>
                 </Link>
@@ -66,7 +73,7 @@ export default function Header() {
                 </nav>
 
                 <div className="flex md:hidden items-center space-x-2">
-                <AppearanceToggleDropdown />
+                    <AppearanceToggleDropdown />
                     <Button
                         variant="ghost"
                         size="icon"

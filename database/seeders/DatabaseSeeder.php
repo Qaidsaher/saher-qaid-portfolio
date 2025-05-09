@@ -274,7 +274,11 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         // Create related records for this user
-        Project::factory(8)->create();
+        Project::factory(8)
+        ->hasFeatures(3)
+        ->hasGalleries(3)
+        ->hasProcesses(2)
+        ->create();
         Article::factory(5)->create();
         Testimonial::factory(6)->create();
         Experience::factory(5)->create();
