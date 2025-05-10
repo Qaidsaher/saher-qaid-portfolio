@@ -584,7 +584,7 @@
     }
 
     .pulse {
-        @apply animate-[pulse_2s_cubic-bezier(0.4, 0, 0.6, 1)_infinite];
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
 
     @keyframes pulse {
@@ -617,4 +617,22 @@
         }
     }
 
+}
+
+@layer utilities {
+    @keyframes custom-pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    .animate-custom-pulse {
+        animation: custom-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
 }
