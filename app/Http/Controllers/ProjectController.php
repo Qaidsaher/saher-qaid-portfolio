@@ -91,7 +91,7 @@ class ProjectController extends Controller
     public function show(string $id)
     {
         // Retrieve the current project.
-        $project = Project::findOrFail($id);
+        $project = Project::with(['features', 'galleries', 'processes'])->findOrFail($id);
 
         // Retrieve all projects ordered by ID.
         $projects = Project::orderBy('id', 'asc')->get();
@@ -107,6 +107,9 @@ class ProjectController extends Controller
 
         return Inertia::render('admin/projects/show', [
             'project'     => $project,
+            'features' => $project->features,
+            'galleries' => $project->galleries,
+            'processes' => $project->processes,
             'projects'    => $projects,
             'prevProject' => $prevProject,
             'nextProject' => $nextProject,
@@ -128,17 +131,9 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified project in storage.
-     */
-
     public function update(Request $request, Project $project) // Using Route Model Binding
     {
-        // 1. Authorization (Optional - good practice)
-        //    e.g., $this->authorize('update', $project);
 
-        // 2. Validate the incoming data
-        //    Validation rules are adjusted to match frontend capabilities and common needs.
         $validated = $request->validate([
             'title'             => 'required|string|max:255',
             'short_description' => 'nullable|string|max:1000', // Max length can be adjusted
@@ -158,68 +153,27 @@ class ProjectController extends Controller
             'client'            => 'nullable|string|max:255',
             'demo_url'          => 'nullable|url:http,https|max:2048',
             'github_url'        => 'nullable|url:http,https|max:2048',
-            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Max 2MB
         ]);
-
-        // 3. Prepare data for update. Start with validated data.
-        //    Eloquent's update method only updates fields present in the array.
-        //    Fields that are nullable and not present in the request (but were in $validated rules)
-        //    won't be in $validated if they were not sent.
-        //    If frontend sends 'field: null', it will be in $validated and set to null.
         $updateData = $validated;
-
-        // 4. Handle image upload (if a new image is provided)
-        if ($request->hasFile('image')) {
-            // Get the uploaded file
-            $newImageFile = $request->file('image');
-
-            // Define a new path for the image
-            // Using project ID helps in organizing files and ensures uniqueness if titles change
-            $newImagePath = $newImageFile->store("projects/{$project->id}/main_image", 'public');
-
-            // If storing was successful, delete the old image (if it exists)
-            if ($newImagePath) {
-                if ($project->image && Storage::disk('public')->exists($project->image)) {
-                    Storage::disk('public')->delete($project->image);
-                }
-                $updateData['image'] = $newImagePath; // Add/replace image path in data to be updated
-            } else {
-                // Optional: Handle storage failure (though store() usually throws an exception)
-                // You might want to return an error if image storage fails critically
-                Log::error("Failed to store new image for project ID: {$project->id}");
-                // Depending on requirements, you might redirect back with an error
-                // return back()->withErrors(['image' => 'Could not save the new image.'])->withInput();
-            }
-        }
-        // If $request->hasFile('image') is false, $updateData will not include 'image',
-        // so the existing $project->image path remains unchanged.
-        // If you wanted a way to *remove* an image, you'd need a separate input like 'remove_image' (boolean).
-
-        // 5. Update the project with the merged data
-        //    Ensure your Project model has these fields in the $fillable array.
         try {
             $project->update($updateData);
         } catch (\Exception $e) {
             Log::error("Error updating project ID {$project->id}: " . $e->getMessage());
-            // Generic error if update fails for other reasons
             return redirect()->route('admin.projects.edit', $project->id) // Redirect back to edit page
                 ->with('error', 'There was an issue updating the project. Please try again.');
         }
 
-        // 6. Redirect with success message
-        //    Redirecting to edit might be better UX than show, so user sees their changes reflected in form
+
         return redirect()->route('admin.projects.edit', $project->id)
             ->with('success', 'Project updated successfully.');
     }
 
 
- /**
+    /**
      * Update only the main image of the specified project.
      */
     public function updateMainImage(Request $request, Project $project)
     {
-        // Optional: Authorization check if the user can update this project
-        // $this->authorize('update', $project);
 
         $validated = $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Max 2MB, adjust as needed
@@ -255,7 +209,6 @@ class ProjectController extends Controller
             $project->save();
 
             return redirect()->back()->with('success', 'Project main image updated successfully.');
-
         } catch (\Exception $e) {
             Log::error("Error updating main image for project {$project->id}: " . $e->getMessage());
             return redirect()->back()

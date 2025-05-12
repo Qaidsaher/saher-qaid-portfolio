@@ -99,9 +99,6 @@ const ProjectMainImageEditor: React.FC<ProjectMainImageEditorProps> = ({
             onSuccess: () => {
                 reset('image');
                 setSelectedFile(null);
-                // Parent component's `project.image` prop should update via Inertia page reload/visit,
-                // which will then update `currentImageUrl` and trigger the useEffect to update `previewUrl`.
-                alert('Main image updated successfully!');
                 if (onUpdateComplete) onUpdateComplete();
             },
             onError: () => {
@@ -122,9 +119,9 @@ const ProjectMainImageEditor: React.FC<ProjectMainImageEditorProps> = ({
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="w-full aspect-[16/9] max-h-[300px] border border-dashed rounded-md flex items-center justify-center bg-muted overflow-hidden">
+                    <div className=" aspect-[16/9] max-h-[300px] border border-dashed rounded-md flex items-center justify-center bg-muted overflow-hidden">
                         {previewUrl ? (
-                            <img src={previewUrl} alt="Project main image preview" className="object-contain h-full w-full" />
+                            <img src={previewUrl} alt="Project main image preview" className="object-cover h-full w-full" />
                         ) : (
                             <div className="text-center text-muted-foreground p-4">
                                 <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />

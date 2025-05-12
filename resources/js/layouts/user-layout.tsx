@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import type { BreadcrumbItem } from "@/types";
+import { FloatingFabs } from "@/components/floating-fabs";
 
 interface UserLayoutProps {
     children: React.ReactNode;
@@ -15,6 +16,7 @@ export default function UserLayout({ children, breadcrumbs }: UserLayoutProps) {
             <div className="flex min-h-screen flex-col ">
                 <Header />
                 <main className="flex-1">{children}</main>
+                 <FloatingFabs />
                 <Footer />
             </div>
         </ThemeProvider>

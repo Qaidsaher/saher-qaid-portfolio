@@ -12,6 +12,7 @@ import {
     Clock,
     Users,
     Tag,
+    Circle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,7 @@ interface FeatureType {
 interface ProcessStep {
     title: string;
     description: string;
-    activities?: string[];
+    steps?: string[];
 }
 
 interface GalleryImage {
@@ -57,8 +58,8 @@ export interface ProjectType {
     demo_url?: string;
     github_url?: string;
     features?: string | FeatureType[];
-    process?: string | ProcessStep[];
-    gallery?: string | GalleryImage[];
+    processes?: string | ProcessStep[];
+    galleries?: string | GalleryImage[];
     role?: string | null;
 }
 
@@ -90,8 +91,8 @@ export default function Show() {
     const technologies: string[] = parseArrayField<string>(project.technologies);
     const categories: string[] = parseArrayField<string>(project.category);
     const features: FeatureType[] = parseArrayField<FeatureType>(project.features);
-    const processSteps: ProcessStep[] = parseArrayField<ProcessStep>(project.process);
-    const gallery: GalleryImage[] = parseArrayField<GalleryImage>(project.gallery);
+    const processSteps: ProcessStep[] = parseArrayField<ProcessStep>(project.processes);
+    const gallery: GalleryImage[] = parseArrayField<GalleryImage>(project.galleries);
 
     // Compute the current index and navigation items.
     const currentIndex = projects.findIndex((p: ProjectType) => p.id === project.id);
@@ -313,15 +314,16 @@ export default function Show() {
                                 <div>
                                     <h3 className="text-xl font-bold mb-2">{step.title}</h3>
                                     <p className="text-muted-foreground mb-4">{step.description}</p>
-                                    {step.activities && (
+                                    {Array.isArray(step.steps) && (
                                         <div className="pl-4 border-l-2 border-muted space-y-2">
-                                            {step.activities.map((activity, actIndex) => (
-                                                <p key={actIndex} className="text-sm">
-                                                    • {activity}
+                                            {step.steps.map((activity, actIndex) => (
+                                                <p key={actIndex} className="text-sm flex items-center gap-2">
+                                                    <Circle size={10} /> {activity}
                                                 </p>
                                             ))}
                                         </div>
                                     )}
+
                                 </div>
                             </div>
                         ))}

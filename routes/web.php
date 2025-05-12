@@ -26,9 +26,14 @@ Route::get('/projects', function () {
 })->name('projects.index');
 
 Route::get('/projects/{project}', function (Project $project) {
-    $projects = Project::orderBy('date','desc')->get();
+    $projects = Project::with(['features', 'galleries', 'processes'])->orderBy('date', 'desc')->get();
+
+
     return Inertia::render('projects/show', [
         'project'  => $project,
+        'features'    => $project->features,
+        'galleries'   => $project->galleries,
+        'processes'   => $project->processes,
         'projects' => $projects,
     ]);
 })->name('projects.show');
